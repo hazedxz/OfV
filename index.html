@@ -3,55 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V-Exclusive | Acceso Seguro</title>
+    <title>V-Exclusive | Experience</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #fa0050; --bg: #000; --card: #111; }
-        body { background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        :root { --primary: #fa0050; --bg: #000; --card: rgba(20, 20, 20, 0.7); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Fondo con brillo neón */
-        .glow { position: absolute; width: 300px; height: 300px; background: var(--primary); filter: blur(160px); opacity: 0.15; z-index: -1; }
+        body { 
+            background: var(--bg); 
+            color: white; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            overflow: hidden;
+        }
 
-        .auth-card { background: var(--card); padding: 40px; border-radius: 35px; border: 1px solid rgba(255,255,255,0.05); width: 90%; max-width: 380px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-        .logo { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -2px; }
-        .logo span { color: var(--primary); }
-        h2 { font-size: 1.1rem; color: #666; margin-bottom: 30px; }
+        /* Fondo Animado */
+        .orb {
+            position: absolute; width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(250,0,80,0.2) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%; z-index: -1; animation: float 10s infinite alternate;
+        }
+        @keyframes float {
+            0% { transform: translate(-20%, -20%); }
+            100% { transform: translate(20%, 20%); }
+        }
 
-        input, select { width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 16px; border: 1px solid #222; background: #000; color: white; font-size: 1rem; box-sizing: border-box; }
-        input:focus { border-color: var(--primary); outline: none; }
+        /* Contenedor Principal con Transición de Perspectiva */
+        .auth-container {
+            perspective: 1000px;
+            width: 90%;
+            max-width: 400px;
+        }
 
-        .btn-primary { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--primary); color: white; font-weight: 800; cursor: pointer; font-size: 1rem; margin-top: 10px; transition: 0.3s; }
-        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(250, 0, 80, 0.3); }
+        .auth-card {
+            background: var(--card);
+            backdrop-filter: blur(25px);
+            padding: 40px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
 
-        .toggle-btn { margin-top: 25px; font-size: 0.9rem; color: #888; cursor: pointer; }
-        .toggle-btn b { color: var(--primary); }
+        /* Clase para la animación de cambio */
+        .card-flip { transform: rotateY(10deg) scale(0.95); opacity: 0; }
 
-        /* Campos ocultos inicialmente */
+        .logo { font-size: 2.8rem; font-weight: 800; letter-spacing: -3px; margin-bottom: 10px; }
+        .logo span { color: var(--primary); text-shadow: 0 0 20px rgba(250,0,80,0.5); }
+
+        .form-group { transition: all 0.4s ease; }
+        
+        input, select {
+            width: 100%; padding: 18px; margin-bottom: 15px;
+            border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.4); color: white; font-size: 1rem;
+            transition: 0.3s; outline: none;
+        }
+        input:focus { border-color: var(--primary); background: rgba(0,0,0,0.6); box-shadow: 0 0 15px rgba(250,0,80,0.2); }
+
+        .btn-main {
+            width: 100%; padding: 18px; border-radius: 20px; border: none;
+            background: var(--primary); color: white; font-weight: 800;
+            font-size: 1.1rem; cursor: pointer; position: relative;
+            overflow: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(250, 0, 80, 0.4); }
+        .btn-main:active { transform: scale(0.95); }
+
+        .toggle-link {
+            margin-top: 25px; font-size: 0.9rem; color: #888; cursor: pointer;
+            display: inline-block; transition: 0.3s;
+        }
+        .toggle-link:hover { color: white; }
+        .toggle-link b { color: var(--primary); }
+
+        /* Animaciones de entrada de elementos */
+        .fade-in-up { animation: fadeInUp 0.6s forwards; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .hidden { display: none; }
     </style>
 </head>
 <body>
-    <div class="glow"></div>
-    <div class="auth-card">
-        <div class="logo">V<span>EX</span></div>
-        <h2 id="title">Inicia sesión para continuar</h2>
+    <div class="orb"></div>
+    
+    <div class="auth-container">
+        <div class="auth-card fade-in-up" id="card">
+            <div class="logo">V<span>EX</span></div>
+            <p id="subtitle" style="color: #666; margin-bottom: 30px; font-weight: 600;">The ultimate exclusive experience</p>
 
-        <div id="register-only" class="hidden">
-            <input type="text" id="username" placeholder="Nombre de usuario (ej: @mariavip)">
-            <select id="rol">
-                <option value="fan">Soy Comprador (Fan)</option>
-                <option value="creador">Soy Creador (Vendedor)</option>
-            </select>
+            <div id="auth-form">
+                <div id="reg-fields" class="hidden">
+                    <input type="text" id="username" placeholder="Tu @Usuario único">
+                    <select id="rol">
+                        <option value="fan">Soy Fan (Comprar)</option>
+                        <option value="creador">Soy Creador (Vender)</option>
+                    </select>
+                </div>
+
+                <input type="email" id="email" placeholder="Correo electrónico">
+                <input type="password" id="password" placeholder="Contraseña segura">
+
+                <button class="btn-main" id="btn-text" onclick="ejecutarAuth()">ENTRAR</button>
+            </div>
+
+            <p class="toggle-link" onclick="animarCambio()">
+                <span id="switch-msg">¿No tienes cuenta?</span> <b id="switch-action">Regístrate</b>
+            </p>
         </div>
-
-        <input type="email" id="email" placeholder="Correo electrónico">
-        <input type="password" id="password" placeholder="Contraseña">
-
-        <button class="btn-primary" id="main-action" onclick="handleAuth()">ENTRAR</button>
-
-        <p class="toggle-btn" onclick="toggleView()">
-            <span id="toggle-text">¿No tienes cuenta?</span> <b id="toggle-link">Regístrate</b>
-        </p>
     </div>
 
     <script type="module">
@@ -72,71 +139,54 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let mode = "login";
+        let esLogin = true;
 
-        // FUNCIÓN PARA CAMBIAR ENTRE LOGIN Y REGISTRO
-        window.toggleView = () => {
-            const regFields = document.getElementById('register-only');
-            const title = document.getElementById('title');
-            const mainBtn = document.getElementById('main-action');
-            const toggleText = document.getElementById('toggle-text');
-            const toggleLink = document.getElementById('toggle-link');
+        // FUNCIÓN CON ANIMACIÓN PRO
+        window.animarCambio = () => {
+            const card = document.getElementById('card');
+            card.classList.add('card-flip');
 
-            if (mode === "login") {
-                mode = "register";
-                regFields.classList.remove('hidden');
-                title.innerText = "Crea tu cuenta gratuita";
-                mainBtn.innerText = "REGISTRARME";
-                toggleText.innerText = "¿Ya tienes cuenta?";
-                toggleLink.innerText = "Inicia sesión";
-            } else {
-                mode = "login";
-                regFields.classList.add('hidden');
-                title.innerText = "Inicia sesión para continuar";
-                mainBtn.innerText = "ENTRAR";
-                toggleText.innerText = "¿No tienes cuenta?";
-                toggleLink.innerText = "Regístrate";
-            }
+            setTimeout(() => {
+                esLogin = !esLogin;
+                
+                // Cambiar contenido mientras está invisible
+                document.getElementById('reg-fields').classList.toggle('hidden');
+                document.getElementById('btn-text').innerText = esLogin ? 'ENTRAR' : 'CREAR MI CUENTA';
+                document.getElementById('switch-msg').innerText = esLogin ? '¿No tienes cuenta?' : '¿Ya eres miembro?';
+                document.getElementById('switch-action').innerText = esLogin ? 'Regístrate' : 'Inicia Sesión';
+                document.getElementById('subtitle').innerText = esLogin ? 'The ultimate exclusive experience' : 'Comienza tu carrera como creador';
+                
+                card.classList.remove('card-flip');
+            }, 300);
         };
 
-        // FUNCIÓN PRINCIPAL DE AUTENTICACIÓN
-        window.handleAuth = async () => {
-            const email = document.getElementById('email').value;
+        window.ejecutarAuth = async () => {
+            const mail = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
             const user = document.getElementById('username').value;
             const rol = document.getElementById('rol').value;
 
-            if (!email || !pass) return alert("Por favor completa los campos");
+            if(!mail || !pass) return alert("Completa los datos");
 
             try {
-                if (mode === "login") {
-                    const res = await signInWithEmailAndPassword(auth, email, pass);
-                    if (!res.user.emailVerified) {
-                        alert("Verifica tu correo electrónico antes de entrar.");
-                        return;
-                    }
+                if (esLogin) {
+                    const res = await signInWithEmailAndPassword(auth, mail, pass);
+                    if (!res.user.emailVerified) return alert("Verifica tu email primero.");
                     window.location.href = "plataforma.html";
                 } else {
-                    if (!user) return alert("Elige un nombre de usuario");
+                    if(!user) return alert("Escribe un usuario");
+                    const res = await createUserWithEmailAndPassword(auth, mail, pass);
                     
-                    const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    
-                    // Guardar datos del usuario en la base de datos
                     await setDoc(doc(db, "usuarios", res.user.uid), {
-                        username: user.replace('@',''),
-                        rol: rol,
-                        email: email,
-                        saldo: 0,
-                        avatar: "",
-                        banner: ""
+                        username: user, rol: rol, email: mail, saldo: 0
                     });
 
                     await sendEmailVerification(res.user);
-                    alert("¡Registro exitoso! Te enviamos un correo de verificación.");
-                    toggleView(); // Regresa al login después de registrarse
+                    alert("¡Te enviamos un correo! Confírmalo para poder entrar.");
+                    animarCambio();
                 }
             } catch (e) {
-                alert("Error: " + e.message);
+                alert(e.message);
             }
         };
     </script>
