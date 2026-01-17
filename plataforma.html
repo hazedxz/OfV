@@ -11,65 +11,83 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
 
-        /* SIDEBAR (Escritorio) */
-        aside { width: 260px; padding: 30px; border-right: 1px solid #222; display: flex; flex-direction: column; }
-        .logo { font-size: 2rem; font-weight: 800; color: white; margin-bottom: 40px; letter-spacing: -1px; }
+        /* ANIMACIONES Y TRANSICIONES */
+        .view-section { 
+            display: none; 
+            opacity: 0; 
+            transform: translateY(10px); 
+            transition: all 0.3s ease-in-out; 
+            height: 100%;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+        .view-section.active-view { 
+            display: block; 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+
+        /* SIDEBAR */
+        aside { width: 260px; padding: 30px; border-right: 1px solid #222; display: flex; flex-direction: column; z-index: 50; }
+        .logo { font-size: 2rem; font-weight: 800; color: white; margin-bottom: 40px; }
         .logo span { color: var(--primary); }
         .menu-item { display: flex; align-items: center; gap: 15px; padding: 15px; color: var(--gray); cursor: pointer; transition: 0.3s; border-radius: 15px; margin-bottom: 5px; font-weight: 600; }
-        .menu-item:hover, .menu-item.active { color: white; background: #1a1a1a; }
+        .menu-item:hover { background: #1a1a1a; color: white; }
+        .menu-item.active { color: white; background: #1a1a1a; border-left: 4px solid var(--primary); }
         .menu-item.active i { color: var(--primary); }
         
         /* AREA PRINCIPAL */
-        main { flex: 1; position: relative; overflow-y: auto; scrollbar-width: none; }
-        .feed-header { padding: 20px; border-bottom: 1px solid #222; position: sticky; top: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 10; display: flex; justify-content: space-between; align-items: center; }
+        main { flex: 1; position: relative; height: 100%; }
+        .feed-container { max-width: 550px; margin: 0 auto; padding: 20px 0 100px 0; }
         
-        /* BOTÓN FLOTANTE (NUEVO DISEÑO MAS COMODO) */
-        .fab-btn {
-            position: fixed; bottom: 30px; right: 30px;
-            background: var(--primary); color: white;
-            width: 60px; height: 60px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; box-shadow: 0 10px 30px rgba(250, 0, 80, 0.4);
-            cursor: pointer; transition: 0.3s; z-index: 100; border: none;
-        }
-        .fab-btn:hover { transform: scale(1.1); }
-
         /* POSTS */
-        .feed-container { max-width: 500px; margin: 0 auto; padding-top: 20px; padding-bottom: 100px; }
-        .post { background: var(--card); border-radius: 20px; border: 1px solid #222; margin-bottom: 20px; overflow: hidden; }
+        .post { background: var(--card); border-radius: 0; border-bottom: 1px solid #222; margin-bottom: 10px; overflow: hidden; }
+        @media(min-width: 768px) { .post { border-radius: 20px; border: 1px solid #222; margin-bottom: 20px; } }
+        
         .post-header { padding: 15px; display: flex; align-items: center; justify-content: space-between; }
         .user-info { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #333; }
         .username { font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 4px; }
+        .badge-verified { color: #3897f0; font-size: 14px; } 
+
+        .post-img-box { position: relative; width: 100%; background: #000; display: flex; justify-content: center; align-items: center; min-height: 300px; }
+        .post-img { width: 100%; max-height: 650px; object-fit: cover; display: block; }
         
-        /* VERIFICADO (SOLO ICONO) */
-        .badge-verified { color: #3897f0; font-size: 14px; } /* Azul estilo Twitter/Insta */
-        
-        .post-img-box { position: relative; width: 100%; background: #000; }
-        .post-img { width: 100%; display: block; max-height: 600px; object-fit: cover; }
-        
+        /* ESTADO BLOQUEADO */
+        .locked-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; padding: 20px; text-align: center; }
+        .locked-title { font-size: 20px; font-weight: 800; margin-bottom: 5px; }
+        .locked-price { color: var(--primary); font-size: 24px; font-weight: 900; margin-bottom: 15px; }
+        .unlock-btn { background: white; color: black; border: none; padding: 12px 25px; border-radius: 30px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .unlock-btn:hover { transform: scale(1.05); background: var(--primary); color: white; }
+
         .post-actions { padding: 15px; display: flex; gap: 20px; }
-        .action-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .action-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .action-btn.liked { color: var(--primary); }
-        .action-btn span { font-size: 1rem; font-weight: 600; }
 
         /* PERFIL */
-        .profile-view { display: none; }
-        .cover-img { width: 100%; height: 200px; object-fit: cover; opacity: 0.7; }
-        .profile-details { margin-top: -50px; padding: 0 20px; position: relative; text-align: left; }
-        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; border: 4px solid black; object-fit: cover; background: #222; }
-        .profile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 20px; max-width: 600px; margin: 0 auto; }
-        .grid-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; cursor: pointer; border-radius: 4px; background: #222; }
+        .cover-img { width: 100%; height: 200px; object-fit: cover; opacity: 0.8; mask-image: linear-gradient(to bottom, black 50%, transparent 100%); }
+        .profile-header { position: relative; margin-top: -60px; padding: 0 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; border: 4px solid black; background: #222; object-fit: cover; }
+        .edit-btn { background: transparent; border: 1px solid #444; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
+        
+        .profile-info { padding: 10px 20px; }
+        .profile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 20px; }
+        .grid-item { aspect-ratio: 1/1; position: relative; cursor: pointer; background: #222; }
+        .grid-img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* COMPRA / LOCK */
-        .locked-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(15px); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .unlock-btn { background: white; color: black; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 800; cursor: pointer; margin-top: 10px; }
+        /* FAB */
+        .fab-btn { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 10px 30px rgba(250, 0, 80, 0.4); cursor: pointer; border: none; z-index: 100; transition: transform 0.2s; }
+        .fab-btn:hover { transform: scale(1.1) rotate(90deg); }
 
         /* MODALES */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 200; display: none; align-items: center; justify-content: center; }
-        .modal-content { background: #111; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; border: 1px solid #333; }
-        .input-field { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 10px; margin: 10px 0; }
-        .primary-btn { width: 100%; background: var(--primary); border: none; padding: 15px; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: #111; padding: 25px; border-radius: 20px; width: 95%; max-width: 450px; border: 1px solid #333; max-height: 90vh; overflow-y: auto; }
+        .input-field { width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: white; border-radius: 12px; margin: 10px 0; outline: none; }
+        .input-field:focus { border-color: var(--primary); }
+        .primary-btn { width: 100%; background: var(--primary); border: none; padding: 15px; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 1rem; }
+        
+        /* NOTIFICACIONES */
+        .notif-badge { background: var(--primary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; position: absolute; top: 10px; right: 10px; display: none; }
 
         /* MOBILE NAV */
         .mobile-nav { display: none; position: fixed; bottom: 0; width: 100%; background: black; border-top: 1px solid #222; padding: 15px; justify-content: space-around; z-index: 90; }
@@ -80,94 +98,136 @@
 
     <aside>
         <div class="logo">V<span>EX</span></div>
-        <div class="menu-item active" onclick="loadFeed()">
+        <div class="menu-item active" id="nav-home" onclick="navTo('feed')">
             <i class="fas fa-home"></i> Inicio
         </div>
-        <div class="menu-item" onclick="loadMyProfile()">
+        <div class="menu-item" id="nav-profile" onclick="navTo('myProfile')">
             <i class="fas fa-user"></i> Mi Perfil
         </div>
-        <div class="menu-item" onclick="document.getElementById('walletModal').style.display='flex'">
-            <i class="fas fa-wallet"></i> Billetera
+        <div class="menu-item" id="nav-requests" onclick="navTo('requests')">
+            <div style="position:relative;">
+                <i class="fas fa-bell"></i>
+                <div id="side-notif" class="notif-badge">!</div>
+            </div>
+             Ventas / Solicitudes
         </div>
-        <button onclick="auth.signOut()" style="margin-top:auto; background:transparent; border:none; color:#666; cursor:pointer; text-align:left;">Cerrar Sesión</button>
+        <button onclick="doLogout()" style="margin-top:auto; background:#222; border:none; color:white; padding:15px; border-radius:10px; cursor:pointer; display:flex; gap:10px; align-items:center;">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+        </button>
     </aside>
 
-    <main id="main-scroll">
+    <main>
         
-        <div id="feed-view">
-            <div class="feed-header">
-                <h3>Inicio</h3>
+        <div id="view-feed" class="view-section active-view">
+            <div style="padding: 20px; font-weight:800; font-size:1.5rem; border-bottom:1px solid #222; position:sticky; top:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:5;">
+                Inicio
             </div>
-            <div class="feed-container" id="feed-container">
-                </div>
+            <div class="feed-container" id="feed-container"></div>
         </div>
 
-        <div id="profile-view" class="profile-view">
+        <div id="view-profile" class="view-section">
             <img id="p-cover" class="cover-img" src="">
-            <div class="profile-details">
-                <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-                    <img id="p-avatar" class="profile-avatar" src="">
-                    <button id="btn-edit-profile" onclick="openBioModal()" style="background:#222; color:white; border:1px solid #444; padding:8px 15px; border-radius:20px; cursor:pointer; font-size:12px; display:none;">Editar Perfil</button>
+            <div class="profile-header">
+                <img id="p-avatar" class="profile-avatar" src="">
+                <div style="display:flex; gap:10px;">
+                    <button id="btn-config-pay" class="edit-btn" onclick="openConfigPay()" style="display:none; border-color:var(--primary); color:var(--primary);">
+                        <i class="fas fa-wallet"></i> Métodos Pago
+                    </button>
+                    <button id="btn-edit-profile" class="edit-btn" onclick="openBioModal()" style="display:none;">Editar Perfil</button>
                 </div>
-                <h2 style="margin-top:10px; display:flex; align-items:center; gap:5px;">
+            </div>
+            <div class="profile-info">
+                <h2 style="display:flex; align-items:center; gap:5px;">
                     <span id="p-name">@usuario</span>
                     <i id="p-badge" class="fas fa-check-circle badge-verified" style="display:none;"></i>
                 </h2>
-                <p id="p-bio" style="color:#aaa; margin-top:5px; font-size:0.9rem;">Sin biografía.</p>
-                
-                <hr style="border:0; border-top:1px solid #222; margin: 20px 0;">
-                <h4 style="margin-bottom:15px;">PUBLICACIONES</h4>
-                <div class="profile-grid" id="profile-posts-grid">
-                    </div>
+                <p id="p-bio" style="color:#aaa; margin-top:5px; font-size:0.95rem;">Sin biografía.</p>
+                <p id="p-pay-info" style="color:#666; font-size:0.8rem; margin-top:5px; display:none;"><i class="fas fa-info-circle"></i> Acepta pagos externos</p>
+            </div>
+            
+            <hr style="border:0; border-top:1px solid #222; margin: 10px 0;">
+            
+            <div class="profile-grid" id="profile-grid"></div>
+            <div style="height:100px;"></div>
+        </div>
+
+        <div id="view-requests" class="view-section">
+            <div style="padding: 20px; font-weight:800; font-size:1.5rem;">Solicitudes de Acceso</div>
+            <div id="requests-container" class="feed-container">
+                <p style="color:#666; text-align:center;">No tienes ventas pendientes por aprobar.</p>
             </div>
         </div>
 
     </main>
 
+    <nav class="mobile-nav">
+        <i class="fas fa-home" onclick="navTo('feed')" style="font-size:1.5rem; color:white;"></i>
+        <i class="fas fa-bell" onclick="navTo('requests')" style="font-size:1.5rem; color:#666;"></i>
+        <i class="fas fa-user" onclick="navTo('myProfile')" style="font-size:1.5rem; color:#666;"></i>
+    </nav>
+
     <button class="fab-btn" onclick="document.getElementById('uploadModal').style.display='flex'">
         <i class="fas fa-plus"></i>
     </button>
 
-    <nav class="mobile-nav">
-        <i class="fas fa-home" style="font-size:1.5rem; color:white;" onclick="loadFeed()"></i>
-        <i class="fas fa-search" style="font-size:1.5rem; color:#666;"></i>
-        <i class="fas fa-user" style="font-size:1.5rem; color:#666;" onclick="loadMyProfile()"></i>
-    </nav>
+    <div class="modal" id="postDetailModal" onclick="if(event.target === this) this.style.display='none'">
+        <div class="modal-content" style="max-width:500px; padding:0; overflow:hidden;">
+            <div id="detail-content"></div>
+        </div>
+    </div>
 
     <div class="modal" id="uploadModal">
         <div class="modal-content">
             <h3>Nueva Publicación</h3>
-            <input type="file" id="fileInput" class="input-field">
-            <input type="number" id="postPrice" class="input-field" placeholder="Precio (Dejar en 0 para gratis)">
-            <button onclick="uploadPost()" class="primary-btn">PUBLICAR AHORA</button>
-            <button onclick="document.getElementById('uploadModal').style.display='none'" style="width:100%; background:transparent; border:none; color:#666; margin-top:10px; cursor:pointer;">Cancelar</button>
+            <input type="file" id="fileInput" class="input-field" accept="image/*">
+            <input type="number" id="postPrice" class="input-field" placeholder="Precio en $ (0 para Gratis)">
+            <p style="font-size:12px; color:#666; margin-bottom:10px;">Si pones precio, los usuarios deberán enviarte el comprobante de pago.</p>
+            <button onclick="uploadPost()" class="primary-btn">PUBLICAR</button>
+            <button onclick="document.getElementById('uploadModal').style.display='none'" style="background:transparent; color:#888; border:none; width:100%; margin-top:10px; cursor:pointer;">Cancelar</button>
+        </div>
+    </div>
+
+    <div class="modal" id="configPayModal">
+        <div class="modal-content">
+            <h3>Tus Datos Bancarios</h3>
+            <p style="font-size:12px; color:#aaa; margin-bottom:10px;">Estos datos se mostrarán a quien quiera desbloquear tu contenido.</p>
+            <textarea id="payMethodsInput" class="input-field" rows="5" placeholder="Ej: Pago Móvil: 0412... C.I: ... Banco: ... &#10;Binance ID: ..."></textarea>
+            <button onclick="savePayMethods()" class="primary-btn">GUARDAR DATOS</button>
+            <button onclick="document.getElementById('configPayModal').style.display='none'" style="background:transparent; color:#888; border:none; width:100%; margin-top:10px; cursor:pointer;">Cerrar</button>
+        </div>
+    </div>
+
+    <div class="modal" id="unlockModal">
+        <div class="modal-content">
+            <h3>Desbloquear Contenido</h3>
+            <p style="color:#aaa; font-size:13px;">Envía el dinero a las cuentas del creador:</p>
+            
+            <div id="creator-pay-info" style="background:#222; padding:15px; border-radius:10px; margin:10px 0; font-family:monospace; white-space: pre-wrap; color: var(--primary);">
+                Cargando datos...
+            </div>
+
+            <p style="color:white; font-size:14px; margin-top:15px;">Sube el Comprobante (Capture):</p>
+            <input type="file" id="proofFile" class="input-field" accept="image/*">
+            
+            <button onclick="sendUnlockRequest()" class="primary-btn">ENVIAR COMPROBANTE</button>
+            <button onclick="closeUnlockModal()" style="background:transparent; color:#888; border:none; width:100%; margin-top:10px; cursor:pointer;">Cancelar</button>
         </div>
     </div>
 
     <div class="modal" id="bioModal">
         <div class="modal-content">
             <h3>Editar Perfil</h3>
-            <p style="font-size:12px; color:#666;">Toca las imágenes en tu perfil para cambiarlas.</p>
-            <textarea id="bioInput" class="input-field" rows="3" placeholder="Tu biografía..."></textarea>
+            <textarea id="bioInput" class="input-field" rows="3" placeholder="Biografía..."></textarea>
+            <p style="font-size:12px; color:#666;">Toca tu foto en el perfil para cambiarla.</p>
             <button onclick="saveBio()" class="primary-btn">Guardar</button>
-            <button onclick="document.getElementById('bioModal').style.display='none'" style="width:100%; background:transparent; border:none; color:#666; margin-top:10px; cursor:pointer;">Cancelar</button>
-        </div>
-    </div>
-
-    <div class="modal" id="walletModal">
-        <div class="modal-content" style="text-align:center;">
-            <h1>$<span id="wallet-balance">0.00</span></h1>
-            <p style="color:#666; margin-bottom:20px;">Saldo Disponible</p>
-            <input type="number" id="rechargeAmount" class="input-field" placeholder="Monto a recargar">
-            <button onclick="addMoney()" class="primary-btn">RECARGAR</button>
-            <button onclick="document.getElementById('walletModal').style.display='none'" style="width:100%; background:transparent; border:none; color:#666; margin-top:10px; cursor:pointer;">Cerrar</button>
+            <button onclick="document.getElementById('bioModal').style.display='none'" style="background:transparent; color:#888; border:none; width:100%; margin-top:10px; cursor:pointer;">Cancelar</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, arrayUnion, arrayRemove, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, arrayUnion, arrayRemove, where, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = { 
              apiKey: "AIzaSyA-y05rnK5lD_v3G7YPS2wE1LlmAjrTz9c",
@@ -182,104 +242,144 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         let myData = null;
+        let currentPostIdToUnlock = null;
+        let currentCreatorIdToPay = null;
+
+        // --- SISTEMA DE NAVEGACIÓN ---
+        window.navTo = (viewName) => {
+            // Ocultar todas
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+            // Quitar active del menu
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+
+            // Mostrar la elegida
+            if(viewName === 'feed') {
+                document.getElementById('view-feed').classList.add('active-view');
+                document.getElementById('nav-home').classList.add('active');
+            } else if (viewName === 'myProfile') {
+                loadProfile(myData.id);
+                document.getElementById('view-profile').classList.add('active-view');
+                document.getElementById('nav-profile').classList.add('active');
+            } else if (viewName === 'requests') {
+                loadRequests();
+                document.getElementById('view-requests').classList.add('active-view');
+                document.getElementById('nav-requests').classList.add('active');
+            } else if (viewName === 'otherProfile') {
+                document.getElementById('view-profile').classList.add('active-view');
+                // No activamos ningun menu item
+            }
+        };
+
+        window.doLogout = () => {
+            signOut(auth).then(() => window.location.href = "index.html");
+        };
 
         // AUTH
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const snap = await getDoc(doc(db, "usuarios", user.uid));
-                myData = { id: user.uid, ...snap.data() };
-                loadFeed(); // Cargar feed al inicio
+                if(snap.exists()){
+                    myData = { id: user.uid, ...snap.data() };
+                    loadFeed(); 
+                    checkNotifications();
+                }
             } else {
                 window.location.href = "index.html";
             }
         });
 
-        // FUNCIONES GLOBALES
-        window.loadFeed = () => {
-            document.getElementById('feed-view').style.display = 'block';
-            document.getElementById('profile-view').style.display = 'none';
-            document.getElementById('main-scroll').scrollTop = 0;
-
+        // --- FEED LOGIC ---
+        function loadFeed() {
+            const container = document.getElementById('feed-container');
             const q = query(collection(db, "posts"), orderBy("fecha", "desc"));
+            
             onSnapshot(q, (snap) => {
-                const container = document.getElementById('feed-container');
                 container.innerHTML = "";
-                
-                snap.forEach(d => {
-                    const post = d.data();
-                    const postId = d.id;
-                    const isLiked = post.likes?.includes(myData.id);
-                    const isOwner = post.creadorId === myData.id;
-                    const isLocked = post.precio > 0 && !isOwner && !post.compradores?.includes(myData.id);
-
-                    // Verificar antigüedad (24h)
-                    if(new Date().getTime() > post.expiraEn) { deleteDoc(doc(db, "posts", postId)); return; }
-
-                    container.innerHTML += `
-                    <div class="post">
-                        <div class="post-header">
-                            <div class="user-info" onclick="openUserProfile('${post.creadorId}')">
-                                <img src="${post.creadorFoto || 'https://via.placeholder.com/40'}" class="avatar">
-                                <div class="username">
-                                    @${post.creador} 
-                                    ${post.verificado ? '<i class="fas fa-check-circle badge-verified"></i>' : ''}
-                                </div>
-                            </div>
-                            ${isOwner ? `<i class="fas fa-trash" onclick="deletePost('${postId}')" style="color:#444; cursor:pointer;"></i>` : ''}
-                        </div>
-
-                        <div class="post-img-box">
-                            ${isLocked ? `
-                                <div class="locked-overlay">
-                                    <i class="fas fa-lock" style="font-size:30px; color:var(--primary); margin-bottom:10px;"></i>
-                                    <button class="unlock-btn" onclick="buyPost('${postId}', ${post.precio})">
-                                        DESBLOQUEAR $${post.precio}
-                                    </button>
-                                </div>
-                                <img src="${post.url}" class="post-img" style="filter:blur(20px);">
-                            ` : `
-                                <img src="${post.url}" class="post-img">
-                            `}
-                        </div>
-
-                        <div class="post-actions">
-                            <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${postId}', ${isLiked})">
-                                <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
-                                <span>${post.likes ? post.likes.length : 0}</span>
-                            </button>
-                        </div>
-                    </div>`;
+                snap.forEach(docSnap => {
+                    const post = docSnap.data();
+                    renderPost(docSnap.id, post, container);
                 });
             });
+        }
+
+        function renderPost(pid, post, parentElement) {
+            // Lógica de acceso: Es dueño O pagó O es gratis
+            const isOwner = post.creadorId === myData.id;
+            const hasAccess = isOwner || post.precio === 0 || (post.accesos && post.accesos.includes(myData.id));
+            const isPending = post.solicitudes && post.solicitudes.some(req => req.userId === myData.id);
+            const isLiked = post.likes && post.likes.includes(myData.id);
+
+            let html = `
+            <div class="post">
+                <div class="post-header">
+                    <div class="user-info" onclick="openUserProfile('${post.creadorId}')">
+                        <img src="${post.creadorFoto || 'https://via.placeholder.com/40'}" class="avatar">
+                        <div class="username">
+                            @${post.creador} 
+                            ${post.verificado ? '<i class="fas fa-check-circle badge-verified"></i>' : ''}
+                        </div>
+                    </div>
+                    ${isOwner ? `<i class="fas fa-trash" onclick="deletePost('${pid}')" style="color:#444; cursor:pointer;"></i>` : ''}
+                </div>
+
+                <div class="post-img-box">
+                    ${hasAccess ? 
+                        `<img src="${post.url}" class="post-img">` : 
+                        `<div class="locked-overlay">
+                            <i class="fas fa-lock" style="font-size:40px; color:var(--primary); margin-bottom:10px;"></i>
+                            <div class="locked-title">CONTENIDO EXCLUSIVO</div>
+                            <div class="locked-price">$${post.precio}</div>
+                            
+                            ${isPending ? 
+                                `<button class="unlock-btn" style="background:#444; color:white; cursor:default;">VERIFICANDO PAGO...</button>` : 
+                                `<button class="unlock-btn" onclick="initUnlock('${pid}', '${post.creadorId}', ${post.precio})">DESBLOQUEAR</button>`
+                            }
+                        </div>
+                        <img src="${post.url}" class="post-img" style="filter:blur(30px); opacity:0.5;">`
+                    }
+                </div>
+
+                <div class="post-actions">
+                    <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${pid}', ${isLiked})">
+                        <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                        <span>${post.likes ? post.likes.length : 0}</span>
+                    </button>
+                </div>
+            </div>`;
+            
+            // Si es feed, append. Si es modal detail, replace.
+            if(parentElement.id === 'detail-content') parentElement.innerHTML = html;
+            else parentElement.innerHTML += html;
+        }
+
+        // --- PERFIL LOGIC ---
+        window.openUserProfile = (uid) => {
+            if(uid === myData.id) navTo('myProfile');
+            else {
+                loadProfile(uid);
+                navTo('otherProfile');
+            }
         };
 
-        // CARGAR PERFIL DE ALGUIEN (O EL MIO)
-        window.openUserProfile = async (userId) => {
-            document.getElementById('feed-view').style.display = 'none';
-            document.getElementById('profile-view').style.display = 'block';
-            document.getElementById('main-scroll').scrollTop = 0;
-
-            // Obtener datos del usuario
-            const userSnap = await getDoc(doc(db, "usuarios", userId));
+        async function loadProfile(uid) {
+            const userSnap = await getDoc(doc(db, "usuarios", uid));
+            if(!userSnap.exists()) return;
             const user = userSnap.data();
+            const isMe = (uid === myData.id);
 
-            // Llenar UI del perfil
+            // UI Header
             document.getElementById('p-name').innerText = "@" + user.username;
-            document.getElementById('p-bio').innerText = user.biografia || "Sin biografía.";
-            document.getElementById('p-cover').src = user.fotoPortada || "https://via.placeholder.com/500x200";
+            document.getElementById('p-bio').innerText = user.biografia || "Sin biografía";
             document.getElementById('p-avatar').src = user.fotoPerfil || "https://via.placeholder.com/100";
-            
-            // Lógica del Badge Verificado
-            const badge = document.getElementById('p-badge');
-            if (user.verificado) badge.style.display = "inline-block";
-            else badge.style.display = "none";
+            document.getElementById('p-cover').src = user.fotoPortada || "https://via.placeholder.com/500x200";
+            document.getElementById('p-badge').style.display = user.verificado ? 'inline-block' : 'none';
+            document.getElementById('p-pay-info').style.display = user.metodosPago ? 'block' : 'none';
 
-            // Botón editar (solo si es mi perfil)
-            const isMe = (myData.id === userId);
+            // Botones de config
             document.getElementById('btn-edit-profile').style.display = isMe ? 'block' : 'none';
-            
-            // Habilitar subida de fotos de perfil solo si soy yo
-            if(isMe) {
+            document.getElementById('btn-config-pay').style.display = isMe ? 'block' : 'none';
+
+            if(isMe){
                 document.getElementById('p-avatar').onclick = () => changePhoto('fotoPerfil');
                 document.getElementById('p-cover').onclick = () => changePhoto('fotoPortada');
             } else {
@@ -287,129 +387,242 @@
                 document.getElementById('p-cover').onclick = null;
             }
 
-            // CARGAR POSTS DE ESTE USUARIO
-            const grid = document.getElementById('profile-posts-grid');
+            // Grid de fotos
+            const grid = document.getElementById('profile-grid');
             grid.innerHTML = "";
-            const q = query(collection(db, "posts"), where("creadorId", "==", userId), orderBy("fecha", "desc"));
-            
+            const q = query(collection(db, "posts"), where("creadorId", "==", uid), orderBy("fecha", "desc"));
             onSnapshot(q, (snap) => {
                 grid.innerHTML = "";
                 snap.forEach(d => {
                     const post = d.data();
-                    // En perfil mostramos miniatura, si es de pago y no comprado, se ve borroso
-                    const isLocked = post.precio > 0 && !post.compradores?.includes(myData.id) && !isMe;
+                    const pid = d.id;
+                    const hasAccess = isMe || post.precio === 0 || (post.accesos && post.accesos.includes(myData.id));
                     
-                    grid.innerHTML += `
-                        <div style="position:relative; overflow:hidden; aspect-ratio:1/1;">
-                             ${isLocked ? '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.5); z-index:2;"><i class="fas fa-lock"></i></div>' : ''}
-                             <img src="${post.url}" class="grid-img" style="${isLocked ? 'filter:blur(5px)' : ''}">
-                        </div>
+                    const div = document.createElement('div');
+                    div.className = 'grid-item';
+                    div.innerHTML = `
+                        ${!hasAccess ? '<div style="position:absolute; inset:0; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; color:white;"><i class="fas fa-lock"></i></div>' : ''}
+                        <img src="${post.url}" class="grid-img" style="${!hasAccess ? 'filter:blur(5px)' : ''}">
                     `;
+                    div.onclick = () => openPostDetail(pid);
+                    grid.appendChild(div);
                 });
             });
-        };
+        }
 
-        window.loadMyProfile = () => openUserProfile(myData.id);
-
-        // LIKES
-        window.toggleLike = async (postId, isLiked) => {
-            const ref = doc(db, "posts", postId);
-            if (isLiked) {
-                await updateDoc(ref, { likes: arrayRemove(myData.id) });
-            } else {
-                await updateDoc(ref, { likes: arrayUnion(myData.id) });
+        window.openPostDetail = async (pid) => {
+            const snap = await getDoc(doc(db, "posts", pid));
+            if(snap.exists()){
+                const modal = document.getElementById('postDetailModal');
+                const content = document.getElementById('detail-content');
+                modal.style.display = 'flex';
+                renderPost(pid, snap.data(), content);
             }
         };
 
-        // SUBIR POST (Corrección: agrega "verificado" al post si el usuario lo es)
-        window.uploadPost = async () => {
-            const file = document.getElementById('fileInput').files[0];
-            const price = parseFloat(document.getElementById('postPrice').value) || 0;
-            if(!file) return alert("Selecciona una imagen");
+        // --- SISTEMA DE PAGOS (MANUAL) ---
+
+        // 1. Creador configura
+        window.openConfigPay = async () => {
+            const snap = await getDoc(doc(db, "usuarios", myData.id));
+            document.getElementById('payMethodsInput').value = snap.data().metodosPago || "";
+            document.getElementById('configPayModal').style.display = 'flex';
+        };
+
+        window.savePayMethods = async () => {
+            const methods = document.getElementById('payMethodsInput').value;
+            await updateDoc(doc(db, "usuarios", myData.id), { metodosPago: methods });
+            alert("Datos guardados");
+            document.getElementById('configPayModal').style.display = 'none';
+        };
+
+        // 2. Comprador inicia desbloqueo
+        window.initUnlock = async (postId, creatorId, price) => {
+            currentPostIdToUnlock = postId;
+            currentCreatorIdToPay = creatorId;
+
+            // Buscar datos del creador
+            const cSnap = await getDoc(doc(db, "usuarios", creatorId));
+            const methods = cSnap.data().metodosPago;
+
+            if(!methods) return alert("Este creador no ha configurado sus métodos de pago aún.");
+
+            document.getElementById('creator-pay-info').innerText = methods;
+            document.getElementById('unlockModal').style.display = 'flex';
+        };
+
+        window.closeUnlockModal = () => {
+             document.getElementById('unlockModal').style.display = 'none';
+             document.getElementById('proofFile').value = "";
+        }
+
+        // 3. Comprador envía comprobante
+        window.sendUnlockRequest = async () => {
+            const file = document.getElementById('proofFile').files[0];
+            if(!file) return alert("Debes subir el capture del pago");
 
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async () => {
-                const ahora = new Date().getTime();
+                const proofBase64 = reader.result;
+                
+                // Guardar solicitud dentro del post
+                const requestObj = {
+                    userId: myData.id,
+                    username: myData.username,
+                    proof: proofBase64,
+                    date: new Date().getTime()
+                };
+
+                await updateDoc(doc(db, "posts", currentPostIdToUnlock), {
+                    solicitudes: arrayUnion(requestObj)
+                });
+
+                alert("Comprobante enviado. Espera a que el creador lo apruebe.");
+                closeUnlockModal();
+            };
+        };
+
+        // --- GESTIÓN DE VENTAS (CREADOR) ---
+        function checkNotifications() {
+            // Escuchar posts mios que tengan solicitudes
+            const q = query(collection(db, "posts"), where("creadorId", "==", myData.id));
+            onSnapshot(q, (snap) => {
+                let hasNotifs = false;
+                snap.forEach(d => {
+                    const data = d.data();
+                    if(data.solicitudes && data.solicitudes.length > 0) hasNotifs = true;
+                });
+                
+                const badges = document.querySelectorAll('.notif-badge');
+                badges.forEach(b => b.style.display = hasNotifs ? 'block' : 'none');
+            });
+        }
+
+        function loadRequests() {
+            const container = document.getElementById('requests-container');
+            container.innerHTML = "";
+            
+            const q = query(collection(db, "posts"), where("creadorId", "==", myData.id));
+            onSnapshot(q, (snap) => {
+                container.innerHTML = "";
+                let count = 0;
+                snap.forEach(postDoc => {
+                    const post = postDoc.data();
+                    if(post.solicitudes && post.solicitudes.length > 0) {
+                        post.solicitudes.forEach(req => {
+                            count++;
+                            container.innerHTML += `
+                            <div class="post">
+                                <div class="post-header">
+                                    <span style="color:var(--primary); font-weight:bold;">Solicitud de @${req.username}</span>
+                                    <span style="font-size:12px; color:#666;">$${post.precio}</span>
+                                </div>
+                                <div style="padding:15px;">
+                                    <p style="margin-bottom:10px; font-size:14px;">Post: <i style="color:#aaa;">Post ID ...${postDoc.id.slice(-4)}</i></p>
+                                    <img src="${req.proof}" style="width:100%; border-radius:10px; margin-bottom:15px; border:1px solid #333;">
+                                    <div style="display:flex; gap:10px;">
+                                        <button onclick="approveAccess('${postDoc.id}', '${req.userId}')" class="primary-btn" style="margin:0; background:green;">APROBAR</button>
+                                        <button onclick="rejectAccess('${postDoc.id}', '${req.userId}')" class="primary-btn" style="margin:0; background:#333;">RECHAZAR</button>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+                    }
+                });
+                if(count === 0) container.innerHTML = "<p style='text-align:center; padding:20px; color:#666;'>No hay solicitudes pendientes.</p>";
+            });
+        }
+
+        window.approveAccess = async (postId, userId) => {
+            if(!confirm("¿Confirmas que recibiste el dinero?")) return;
+            
+            const postRef = doc(db, "posts", postId);
+            const postSnap = await getDoc(postRef);
+            const solicitudes = postSnap.data().solicitudes || [];
+            
+            // Filtrar la solicitud especifica
+            const requestToRemove = solicitudes.find(r => r.userId === userId);
+
+            await updateDoc(postRef, {
+                accesos: arrayUnion(userId), // Dar acceso
+                solicitudes: arrayRemove(requestToRemove) // Quitar de pendientes
+            });
+            alert("Acceso concedido.");
+        };
+
+        window.rejectAccess = async (postId, userId) => {
+             if(!confirm("¿Rechazar solicitud?")) return;
+             const postRef = doc(db, "posts", postId);
+             const postSnap = await getDoc(postRef);
+             const solicitudes = postSnap.data().solicitudes || [];
+             const requestToRemove = solicitudes.find(r => r.userId === userId);
+             
+             await updateDoc(postRef, {
+                solicitudes: arrayRemove(requestToRemove)
+            });
+        }
+
+        // --- SUBIR POST ---
+        window.uploadPost = async () => {
+            const file = document.getElementById('fileInput').files[0];
+            const price = parseFloat(document.getElementById('postPrice').value) || 0;
+            if(!file) return alert("Selecciona imagen");
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
                 await addDoc(collection(db, "posts"), {
                     creador: myData.username,
                     creadorId: myData.id,
                     creadorFoto: myData.fotoPerfil || null,
-                    verificado: myData.verificado || false, // IMPORTANTE: Guarda si es verificado
+                    verificado: myData.verificado || false,
                     url: reader.result,
                     precio: price,
-                    fecha: ahora,
-                    expiraEn: ahora + (24 * 60 * 60 * 1000),
+                    fecha: new Date().getTime(),
                     likes: [],
-                    compradores: []
+                    accesos: [], // IDs de gente que pagó
+                    solicitudes: [] // Solicitudes pendientes con capture
                 });
                 document.getElementById('uploadModal').style.display = 'none';
-                loadFeed();
+                navTo('feed');
             };
         };
 
-        // RESTO DE FUNCIONES (Billetera, Bio, Fotos, Borrar, Comprar)
-        window.deletePost = async (id) => { if(confirm("¿Borrar?")) deleteDoc(doc(db, "posts", id)); };
-        
-        window.buyPost = async (postId, price) => {
-            if((myData.saldo || 0) < price) return alert("Saldo insuficiente");
-            if(!confirm(`¿Pagar $${price}?`)) return;
-            
-            // Restar saldo al comprador
-            await updateDoc(doc(db, "usuarios", myData.id), { saldo: (myData.saldo || 0) - price });
-            // Agregar a compradores del post
-            await updateDoc(doc(db, "posts", postId), { compradores: arrayUnion(myData.id) });
-            
-            // Buscar al creador y darle el dinero
-            const postRef = await getDoc(doc(db, "posts", postId));
-            const creatorId = postRef.data().creadorId;
-            const creatorSnap = await getDoc(doc(db, "usuarios", creatorId));
-            const currentBalance = creatorSnap.data().saldo || 0;
-            await updateDoc(doc(db, "usuarios", creatorId), { saldo: currentBalance + price });
-            
-            alert("Compra exitosa");
-            location.reload(); 
-        };
-
-        window.addMoney = async () => {
-            const amount = parseFloat(document.getElementById('rechargeAmount').value);
-            if(!amount) return;
-            await updateDoc(doc(db, "usuarios", myData.id), { saldo: (myData.saldo || 0) + amount });
-            document.getElementById('wallet-balance').innerText = ((myData.saldo || 0) + amount).toFixed(2);
-            document.getElementById('walletModal').style.display='none';
+        // --- EXTRAS ---
+        window.toggleLike = async (pid, isLiked) => {
+            const ref = doc(db, "posts", pid);
+            if(isLiked) await updateDoc(ref, { likes: arrayRemove(myData.id) });
+            else await updateDoc(ref, { likes: arrayUnion(myData.id) });
         };
 
         window.saveBio = async () => {
-            await updateDoc(doc(db, "usuarios", myData.id), { biografia: document.getElementById('bioInput').value });
-            document.getElementById('p-bio').innerText = document.getElementById('bioInput').value;
+            const bio = document.getElementById('bioInput').value;
+            await updateDoc(doc(db, "usuarios", myData.id), { biografia: bio });
+            document.getElementById('p-bio').innerText = bio;
             document.getElementById('bioModal').style.display='none';
         };
-
+        
         window.openBioModal = () => {
-            document.getElementById('bioInput').value = document.getElementById('p-bio').innerText;
-            document.getElementById('bioModal').style.display='flex';
-        };
+             document.getElementById('bioInput').value = document.getElementById('p-bio').innerText;
+             document.getElementById('bioModal').style.display = 'flex';
+        }
 
         window.changePhoto = (field) => {
-            const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
+            const input = document.createElement('input'); input.type = 'file'; accept='image/*';
             input.onchange = e => {
-                const file = e.target.files[0];
                 const reader = new FileReader();
-                reader.readAsDataURL(file);
                 reader.onload = async () => {
-                    const obj = {}; obj[field] = reader.result;
-                    await updateDoc(doc(db, "usuarios", myData.id), obj);
-                    loadMyProfile(); // Recargar perfil visualmente
+                    await updateDoc(doc(db, "usuarios", myData.id), { [field]: reader.result });
+                    loadProfile(myData.id);
                 };
+                reader.readAsDataURL(e.target.files[0]);
             };
             input.click();
         };
 
-        // Inicializar billetera visualmente
-        window.openWallet = () => {
-            document.getElementById('wallet-balance').innerText = (myData.saldo || 0).toFixed(2);
-            document.getElementById('walletModal').style.display='flex';
-        }
+        window.deletePost = async (pid) => { if(confirm("¿Borrar?")) deleteDoc(doc(db, "posts", pid)); };
+
     </script>
 </body>
 </html>
