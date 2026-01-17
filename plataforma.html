@@ -7,13 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #fa0050; --primary-hover: #ff2e70; --bg: #050505; --card: #111; --border: rgba(255,255,255,0.08); }
+        :root { --primary: #fa0050; --bg: #050505; --card: #111; --border: rgba(255,255,255,0.08); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; }
 
         .app-container { display: flex; height: 100vh; max-width: 1400px; margin: 0 auto; }
 
-        /* SIDEBAR PC */
+        /* SIDEBAR */
         aside.sidebar { width: 280px; padding: 30px; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
         .logo { font-size: 1.8rem; font-weight: 800; margin-bottom: 40px; color: white; text-decoration: none; }
         .logo span { color: var(--primary); }
@@ -21,92 +21,50 @@
         .nav-link:hover, .nav-link.active { background: #1a1a1a; color: white; }
         .nav-link.active { color: var(--primary); }
 
-        /* ÁREA DE CONTENIDO */
-        main.content-area { flex-grow: 1; overflow-y: auto; scrollbar-width: none; position: relative; padding-bottom: 100px; }
+        /* CONTENIDO */
+        main.content-area { flex-grow: 1; overflow-y: auto; scrollbar-width: none; padding-bottom: 100px; }
         .view-section { display: none; animation: fadeIn 0.4s ease; padding: 20px; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* NUEVO BOTÓN DE PUBLICAR (LLAMATIVO) */
+        /* BOTÓN CREAR (NUEVO DISEÑO) */
         .create-post-btn {
             background: linear-gradient(135deg, #fa0050 0%, #ff4070 100%);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 22px;
-            border-radius: 22px;
-            font-weight: 800;
-            cursor: pointer;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            box-shadow: 0 10px 25px rgba(250, 0, 80, 0.3);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: white; border: none; width: 100%; padding: 22px; border-radius: 22px;
+            font-weight: 800; cursor: pointer; margin-bottom: 30px; font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 10px 25px rgba(250, 0, 80, 0.3); transition: 0.3s;
         }
-        .create-post-btn i { font-size: 1.3rem; }
-        .create-post-btn:hover {
-            transform: translateY(-4px) scale(1.01);
-            box-shadow: 0 20px 40px rgba(250, 0, 80, 0.5);
-            background: linear-gradient(135deg, #ff1a66 0%, #ff5c85 100%);
-        }
-        .create-post-btn:active { transform: scale(0.98); }
+        .create-post-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(250, 0, 80, 0.5); }
 
-        /* TRANSICIÓN DE IMÁGENES */
-        .fade-in-img { opacity: 0; transition: opacity 0.5s ease-in-out; }
-        .fade-in-img.loaded { opacity: 1; }
-
-        /* POST CARDS */
+        /* POSTS */
         .post-card { background: var(--card); border-radius: 25px; border: 1px solid var(--border); margin: 0 auto 20px auto; max-width: 500px; overflow: hidden; }
-        .post-header { padding: 15px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .post-avatar { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: var(--primary); display: flex; align-items: center; justify-content: center; }
+        .post-header { padding: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .post-avatar { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #222; }
         .post-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .post-img { width: 100%; aspect-ratio: 1/1; position: relative; background: #000; }
-        .post-img img { width: 100%; height: 100%; object-fit: cover; }
-        .blur-lock { position: absolute; inset: 0; backdrop-filter: blur(50px); background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-        .post-actions { padding: 15px 20px; display: flex; align-items: center; gap: 15px; border-top: 1px solid var(--border); }
-        .like-btn { cursor: pointer; transition: 0.3s; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
-        .like-btn.active { color: var(--primary); }
+        .post-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.5s; }
+        .post-img img.loaded { opacity: 1; }
+        
+        /* BADGE VERIFICADO */
+        .v-badge {
+            background: linear-gradient(135deg, #ffd700, #ffae00);
+            color: #000; font-size: 10px; padding: 2px 8px; border-radius: 20px;
+            font-weight: 800; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;
+        }
 
-        /* PERFIL (CORREGIDO: FOTO ENTERA) */
+        /* PERFIL CORREGIDO */
         .profile-header { position: relative; width: 100%; height: 220px; background: #151515; border-radius: 0 0 30px 30px; }
-        .cover-img { width: 100%; height: 100%; object-fit: cover; border-radius: 0 0 30px 30px; }
-        .avatar-main { position: absolute; bottom: -50px; left: 25px; width: 110px; height: 110px; border-radius: 50%; border: 5px solid var(--bg); background: var(--primary); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 800; cursor: pointer; z-index: 2; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        .avatar-main { position: absolute; bottom: -50px; left: 25px; width: 110px; height: 110px; border-radius: 50%; border: 5px solid var(--bg); background: var(--primary); overflow: hidden; z-index: 5; }
         .avatar-main img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-info { margin-top: 65px; padding: 0 25px; }
-        .btn-edit-cover { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 10px 18px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: 0.3s; z-index: 2; }
-        .btn-edit-cover:hover { background: var(--primary); }
-
-        /* BILLETERA */
-        .wallet-card { background: linear-gradient(135deg, #1a1a1a 0%, #000 100%); padding: 40px; border-radius: 35px; border: 1px solid var(--border); text-align: center; margin-top: 20px; }
-        .balance-num { font-size: 3.5rem; font-weight: 800; margin: 15px 0; }
 
         /* MODALES */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
-        .modal-content { background: #111; padding: 30px; border-radius: 35px; width: 100%; max-width: 450px; border: 1px solid var(--border); animation: modalUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes modalUp { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .modal-input { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid #222; background: #000; color: white; margin-top: 15px; font-size: 1.1rem; }
-        .modal-btn { background: var(--primary); color: white; border: none; width: 100%; padding: 20px; border-radius: 18px; margin-top: 20px; font-weight: 800; cursor: pointer; font-size: 1rem; transition: 0.2s; }
-        .modal-btn:hover { transform: scale(1.02); }
-        .upload-zone { border: 2px dashed #333; border-radius: 25px; padding: 40px; text-align: center; cursor: pointer; transition: 0.3s; margin: 20px 0; position: relative; }
-        .upload-zone:hover { border-color: var(--primary); background: rgba(250, 0, 80, 0.05); }
-        .upload-zone.active { border-color: var(--primary); color: var(--primary); border-style: solid; }
-
-        /* BARRA MÓVIL */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+        .modal-content { background: #111; padding: 30px; border-radius: 30px; width: 100%; max-width: 450px; border: 1px solid var(--border); }
+        .modal-input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #222; background: #000; color: white; margin-top: 10px; }
+        
         .mobile-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; display: none; justify-content: space-around; padding: 20px; border-top: 1px solid var(--border); z-index: 1000; }
-        .mobile-nav i { font-size: 1.5rem; color: #555; cursor: pointer; }
-        .mobile-nav i.active { color: var(--primary); }
-
-        @media (max-width: 850px) {
-            aside.sidebar { display: none; }
-            .mobile-nav { display: flex; }
-        }
+        @media (max-width: 850px) { aside.sidebar { display: none; } .mobile-nav { display: flex; } }
     </style>
 </head>
 <body>
@@ -130,25 +88,26 @@
 
             <section id="profile-view" class="view-section">
                 <div class="profile-header">
-                    <img id="p-cover" src="" class="cover-img fade-in-img">
-                    <button class="btn-edit-cover" onclick="document.getElementById('coverInput').click()"><i class="fas fa-camera"></i> Portada</button>
+                    <img id="p-cover" src="" style="width:100%; height:100%; object-fit:cover; border-radius: 0 0 30px 30px;">
+                    <button onclick="document.getElementById('coverInput').click()" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.5); color:white; border:none; padding:8px 15px; border-radius:10px; cursor:pointer;"><i class="fas fa-camera"></i></button>
                     <div class="avatar-main" id="p-avatar-box" onclick="document.getElementById('avatarInput').click()">?</div>
                 </div>
-                <div class="profile-info">
-                    <h2 id="p-name" style="font-size: 2rem; font-weight: 800;">@username</h2>
-                    <p style="color:var(--primary); font-weight: 800; font-size: 0.9rem; margin-bottom: 15px;">CREADOR VERIFICADO</p>
-                    <p id="p-bio" onclick="openModal('bioModal')" style="color:#777; line-height: 1.6; cursor:pointer;">Toca para añadir biografía...</p>
+                <div style="margin-top: 65px; padding: 0 10px;">
+                    <h2 style="display:flex; align-items:center; font-size:1.8rem;">
+                        <span id="p-name">@username</span>
+                        <span class="v-badge"><i class="fas fa-check-circle"></i> VERIFICADO</span>
+                    </h2>
+                    <p id="p-bio" onclick="openModal('bioModal')" style="color:#777; margin-top:10px; cursor:pointer;">Añadir biografía...</p>
                 </div>
                 <input type="file" id="coverInput" hidden accept="image/*" onchange="updatePhoto('fotoPortada', this)">
                 <input type="file" id="avatarInput" hidden accept="image/*" onchange="updatePhoto('fotoPerfil', this)">
             </section>
 
             <section id="wallet-view" class="view-section">
-                <h1 style="font-weight: 800; margin-bottom: 20px;">Mi Billetera</h1>
-                <div class="wallet-card">
-                    <p style="color:#888; font-weight: 600;">Saldo disponible</p>
-                    <div class="balance-num">$<span id="w-balance">0.00</span></div>
-                    <button onclick="openModal('walletModal')" style="background:white; color:black; border:none; padding:18px 40px; border-radius:20px; font-weight:800; cursor:pointer; font-size:1rem;">RECARGAR FONDOS</button>
+                <div style="background:linear-gradient(135deg, #1a1a1a, #000); padding:40px; border-radius:30px; text-align:center;">
+                    <p style="color:#888;">Saldo Disponible</p>
+                    <h1 style="font-size:3.5rem; margin:10px 0;">$<span id="w-balance">0.00</span></h1>
+                    <button onclick="openModal('walletModal')" style="background:white; color:black; border:none; padding:15px 30px; border-radius:15px; font-weight:800; cursor:pointer;">RECARGAR</button>
                 </div>
             </section>
         </main>
@@ -157,44 +116,43 @@
     <nav class="mobile-nav">
         <i class="fas fa-home active" onclick="switchView('home-view', this)"></i>
         <i class="fas fa-plus-circle" onclick="openModal('uploadModal')"></i>
-        <i class="fas fa-wallet" onclick="switchView('wallet-view', this)"></i>
         <i class="fas fa-user" onclick="switchView('profile-view', this)"></i>
     </nav>
 
     <div class="modal" id="uploadModal">
         <div class="modal-content">
-            <h2 style="text-align:center; font-weight:800;">Crear Publicación</h2>
-            <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-image"></i>
-                <p id="fileStatus">Toca para subir una foto</p>
-                <input type="file" id="fileInput" hidden accept="image/*">
+            <h3 style="text-align:center; margin-bottom:20px;">Nueva Publicación</h3>
+            <div onclick="document.getElementById('fileInput').click()" style="border:2px dashed #333; padding:40px; text-align:center; border-radius:20px; cursor:pointer; margin-bottom:15px;">
+                <i class="fas fa-image" style="font-size:2rem; color:#444;"></i>
+                <p id="fileStatus" style="margin-top:10px;">Seleccionar Foto</p>
             </div>
-            <input type="number" id="postPrice" class="modal-input" style="text-align:center; font-weight:800;" placeholder="Precio $ (0 = Gratis)">
-            <button onclick="uploadPost()" id="btnUpload" class="modal-btn">PUBLICAR AHORA</button>
-            <button onclick="closeModal('uploadModal')" style="background:none; border:none; color:#555; width:100%; margin-top:15px; cursor:pointer;">Cancelar</button>
+            <input type="file" id="fileInput" hidden accept="image/*" onchange="document.getElementById('fileStatus').innerText = '✅ Imagen Lista'">
+            <input type="number" id="postPrice" class="modal-input" placeholder="Precio $ (0 para gratis)">
+            <button onclick="uploadPost()" id="btnUpload" class="create-post-btn" style="margin-top:20px; margin-bottom:10px;">PUBLICAR</button>
+            <button onclick="closeModal('uploadModal')" style="width:100%; background:none; border:none; color:#555; cursor:pointer;">Cancelar</button>
         </div>
     </div>
+
     <div class="modal" id="bioModal">
         <div class="modal-content">
-            <h2 style="text-align:center; font-weight:800; margin-bottom:20px;">Editar Biografía</h2>
-            <textarea id="bioInput" class="modal-input" rows="4" placeholder="Escribe algo sobre ti..."></textarea>
-            <button onclick="saveBio()" class="modal-btn">GUARDAR BIOGRAFÍA</button>
-            <button onclick="closeModal('bioModal')" style="background:none; border:none; color:#555; width:100%; margin-top:15px; cursor:pointer;">Cancelar</button>
+            <h3>Editar Biografía</h3>
+            <textarea id="bioInput" class="modal-input" rows="4"></textarea>
+            <button onclick="saveBio()" class="create-post-btn" style="margin-top:15px;">GUARDAR</button>
         </div>
     </div>
+
     <div class="modal" id="walletModal">
         <div class="modal-content">
-            <h2 style="text-align:center; font-weight:800; margin-bottom:20px;">Recargar Saldo</h2>
-            <input type="number" id="walletInput" class="modal-input" style="text-align:center; font-weight:800;" placeholder="Cantidad (ej: 50)">
-            <button onclick="saveMoney()" class="modal-btn">RECARGAR AHORA</button>
-            <button onclick="closeModal('walletModal')" style="background:none; border:none; color:#555; width:100%; margin-top:15px; cursor:pointer;">Cancelar</button>
+            <h3>Recargar Saldo</h3>
+            <input type="number" id="walletInput" class="modal-input" placeholder="Cantidad a recargar">
+            <button onclick="saveMoney()" class="create-post-btn" style="margin-top:15px;">RECARGAR AHORA</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = { 
             apiKey: "AIzaSyA-y05rnK5lD_v3G7YPS2wE1LlmAjrTz9c",
@@ -211,7 +169,7 @@
         let myData = null;
 
         onAuthStateChanged(auth, async (user) => {
-            if (user && user.emailVerified) {
+            if (user) {
                 const snap = await getDoc(doc(db, "usuarios", user.uid));
                 myData = { id: user.uid, ...snap.data() };
                 updateAllUI();
@@ -219,22 +177,24 @@
             } else { window.location.href = "index.html"; }
         });
 
+        // LIMPIEZA AUTOMÁTICA DE FIREBASE (Borrador de +24h)
+        async function autoCleanFirebase(posts) {
+            const ahora = new Date().getTime();
+            posts.forEach(async (d) => {
+                const post = d.data();
+                if (post.expiraEn && post.expiraEn < ahora) {
+                    await deleteDoc(doc(db, "posts", d.id));
+                    console.log("Post eliminado por antigüedad:", d.id);
+                }
+            });
+        }
+
         function updateAllUI() {
             document.getElementById('p-name').innerText = "@" + myData.username;
             document.getElementById('w-balance').innerText = (myData.saldo || 0).toFixed(2);
-            document.getElementById('p-bio').innerText = myData.biografia || "Haz clic para añadir biografía...";
-            
-            const avatarBox = document.getElementById('p-avatar-box');
-            if(myData.fotoPerfil) {
-                avatarBox.innerHTML = `<img src="${myData.fotoPerfil}" class="fade-in-img">`;
-                avatarBox.querySelector('img').onload = function() { this.classList.add('loaded'); };
-            }
-
-            const coverImg = document.getElementById('p-cover');
-            if(myData.fotoPortada) {
-                coverImg.src = myData.fotoPortada;
-                coverImg.onload = function() { this.classList.add('loaded'); };
-            }
+            document.getElementById('p-bio').innerText = myData.biografia || "Toca para añadir biografía...";
+            if(myData.fotoPerfil) document.getElementById('p-avatar-box').innerHTML = `<img src="${myData.fotoPerfil}">`;
+            if(myData.fotoPortada) document.getElementById('p-cover').src = myData.fotoPortada;
         }
 
         window.switchView = (id, el) => {
@@ -244,36 +204,13 @@
             el.classList.add('active');
         };
 
-        window.openModal = (id) => {
-            document.getElementById(id).style.display = 'flex';
-            if(id === 'bioModal') document.getElementById('bioInput').value = myData.biografia || '';
-        };
-        window.closeModal = (id) => {
-            document.getElementById(id).style.display = 'none';
-            if(id === 'uploadModal') resetUploadForm();
-        };
-
-        const fileInput = document.getElementById('fileInput');
-        fileInput.onchange = () => {
-            if(fileInput.files[0]) {
-                document.getElementById('fileStatus').innerText = "✅ Imagen lista: " + fileInput.files[0].name;
-                document.getElementById('dropZone').classList.add('active');
-            }
-        };
-
-        function resetUploadForm() {
-            fileInput.value = "";
-            document.getElementById('dropZone').classList.remove('active');
-            document.getElementById('fileStatus').innerText = "Toca para subir una foto";
-            document.getElementById('postPrice').value = "";
-            document.getElementById('btnUpload').innerText = "PUBLICAR AHORA";
-            document.getElementById('btnUpload').disabled = false;
-        }
+        window.openModal = (id) => document.getElementById(id).style.display = 'flex';
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
         window.uploadPost = async () => {
-            const file = fileInput.files[0];
+            const file = document.getElementById('fileInput').files[0];
             const price = parseFloat(document.getElementById('postPrice').value) || 0;
-            if(!file) return alert("Selecciona una foto");
+            if(!file) return alert("Selecciona una imagen");
 
             const btn = document.getElementById('btnUpload');
             btn.innerText = "SUBIENDO..."; btn.disabled = true;
@@ -281,18 +218,53 @@
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async () => {
+                const ahora = new Date().getTime();
+                const expira = ahora + (24 * 60 * 60 * 1000); // 24 Horas exactas
+
                 await addDoc(collection(db, "posts"), {
-                    creador: myData.username,
-                    creadorId: myData.id,
-                    creadorFoto: myData.fotoPerfil || null, 
-                    url: reader.result,
-                    precio: price,
-                    fecha: new Date(),
-                    likes: [],
-                    compradores: []
+                    creador: myData.username, creadorId: myData.id,
+                    creadorFoto: myData.fotoPerfil || null,
+                    url: reader.result, precio: price,
+                    fecha: ahora, expiraEn: expira,
+                    likes: [], compradores: []
                 });
-                closeModal('uploadModal');
+                location.reload(); // Recarga para limpiar formulario
             };
+        };
+
+        function loadFeed() {
+            const q = query(collection(db, "posts"), orderBy("fecha", "desc"));
+            onSnapshot(q, (snap) => {
+                autoCleanFirebase(snap); // Ejecuta limpieza cada vez que alguien entra
+                const container = document.getElementById('feed-container');
+                container.innerHTML = "";
+                snap.forEach(d => {
+                    const post = d.data();
+                    const isOwner = post.creadorId === myData.id;
+                    const isLocked = post.precio > 0 && !isOwner && !post.compradores?.includes(myData.id);
+                    
+                    container.innerHTML += `
+                        <div class="post-card">
+                            <div class="post-header">
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <div class="post-avatar">${post.creadorFoto ? `<img src="${post.creadorFoto}">` : `<i class="fas fa-user"></i>`}</div>
+                                    <div style="font-weight:800;">@${post.creador}</div>
+                                </div>
+                                ${isOwner ? `<i class="fas fa-trash" onclick="deletePost('${d.id}')" style="color:#333; cursor:pointer;"></i>` : ''}
+                            </div>
+                            <div class="post-img">
+                                ${isLocked ? `<div style="height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column; background:#1a1a1a;">
+                                    <i class="fas fa-lock" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
+                                    <button onclick="buyPost('${d.id}', ${post.precio})" class="create-post-btn" style="width:auto; padding:10px 20px;">DESBLOQUEAR $${post.precio}</button>
+                                </div>` : `<img src="${post.url}" onload="this.classList.add('loaded')">`}
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+
+        window.deletePost = async (id) => {
+            if(confirm("¿Eliminar publicación?")) await deleteDoc(doc(db, "posts", id));
         };
 
         window.updatePhoto = async (field, input) => {
@@ -301,85 +273,21 @@
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async () => {
-                const updateObj = {}; updateObj[field] = reader.result;
-                await updateDoc(doc(db, "usuarios", myData.id), updateObj);
-                myData[field] = reader.result;
-                updateAllUI();
-                input.value = "";
+                const obj = {}; obj[field] = reader.result;
+                await updateDoc(doc(db, "usuarios", myData.id), obj);
+                location.reload();
             };
         };
 
         window.saveBio = async () => {
-            const newBio = document.getElementById('bioInput').value;
-            await updateDoc(doc(db, "usuarios", myData.id), { biografia: newBio });
-            myData.biografia = newBio; updateAllUI(); closeModal('bioModal');
+            await updateDoc(doc(db, "usuarios", myData.id), { biografia: document.getElementById('bioInput').value });
+            location.reload();
         };
 
         window.saveMoney = async () => {
             const amount = parseFloat(document.getElementById('walletInput').value);
-            if(amount > 0) {
-                const newBalance = (myData.saldo || 0) + amount;
-                await updateDoc(doc(db, "usuarios", myData.id), { saldo: newBalance });
-                myData.saldo = newBalance; updateAllUI(); closeModal('walletModal');
-                document.getElementById('walletInput').value = "";
-            }
-        };
-
-        function loadFeed() {
-            const q = query(collection(db, "posts"), orderBy("fecha", "desc"));
-            onSnapshot(q, (snap) => {
-                const container = document.getElementById('feed-container');
-                container.innerHTML = "";
-                snap.forEach(d => {
-                    const post = d.data();
-                    const isOwner = post.creadorId === myData.id;
-                    const hasBought = post.compradores?.includes(myData.id);
-                    const isLocked = post.precio > 0 && !isOwner && !hasBought;
-                    const hasLiked = post.likes?.includes(myData.id);
-
-                    const imgElement = isLocked ? '' : `<img src="${post.url}" class="fade-in-img" onload="this.classList.add('loaded')">`;
-
-                    container.innerHTML += `
-                        <div class="post-card">
-                            <div class="post-header">
-                                <div class="post-avatar">
-                                    ${post.creadorFoto ? `<img src="${post.creadorFoto}">` : `<i class="fas fa-user"></i>`}
-                                </div>
-                                <div style="font-weight:800;">@${post.creador}</div>
-                            </div>
-                            <div class="post-img">
-                                ${isLocked ? `
-                                    <div class="blur-lock">
-                                        <i class="fas fa-lock" style="font-size:2.5rem; color:var(--primary); margin-bottom:15px;"></i>
-                                        <button onclick="buyPost('${d.id}', ${post.precio})" style="background:var(--primary); border:none; color:white; padding:15px 30px; border-radius:15px; font-weight:800; cursor:pointer; box-shadow: 0 10px 20px rgba(250,0,80,0.3);">DESBLOQUEAR POR $${post.precio}</button>
-                                    </div>
-                                ` : imgElement}
-                            </div>
-                            <div class="post-actions">
-                                <div class="like-btn ${hasLiked ? 'active' : ''}" style="${isLocked ? 'opacity:0.2; pointer-events:none;' : ''}" 
-                                     onclick="toggleLike('${d.id}', ${hasLiked})">
-                                    <i class="${hasLiked ? 'fas' : 'far'} fa-heart"></i> 
-                                    <span>${post.likes?.length || 0}</span>
-                                </div>
-                            </div>
-                        </div>`;
-                });
-            });
-        }
-
-        window.buyPost = async (postId, price) => {
-            if((myData.saldo || 0) < price) return alert("Saldo insuficiente.");
-            if(confirm(`¿Desbloquear por $${price}?`)) {
-                const newBalance = myData.saldo - price;
-                await updateDoc(doc(db, "usuarios", myData.id), { saldo: newBalance });
-                await updateDoc(doc(db, "posts", postId), { compradores: arrayUnion(myData.id) });
-                myData.saldo = newBalance; updateAllUI();
-            }
-        };
-
-        window.toggleLike = async (postId, hasLiked) => {
-            const postRef = doc(db, "posts", postId);
-            await updateDoc(postRef, { likes: hasLiked ? arrayRemove(myData.id) : arrayUnion(myData.id) });
+            await updateDoc(doc(db, "usuarios", myData.id), { saldo: (myData.saldo || 0) + amount });
+            location.reload();
         };
     </script>
 </body>
