@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #fa0050; --bg: #050505; --card: #111; --border: rgba(255,255,255,0.08); }
+        :root { --primary: #fa0050; --primary-hover: #ff2e70; --bg: #050505; --card: #111; --border: rgba(255,255,255,0.08); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; }
 
@@ -27,6 +27,37 @@
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* NUEVO BOTÓN DE PUBLICAR (LLAMATIVO) */
+        .create-post-btn {
+            background: linear-gradient(135deg, #fa0050 0%, #ff4070 100%);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 22px;
+            border-radius: 22px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(250, 0, 80, 0.3);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .create-post-btn i { font-size: 1.3rem; }
+        .create-post-btn:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(250, 0, 80, 0.5);
+            background: linear-gradient(135deg, #ff1a66 0%, #ff5c85 100%);
+        }
+        .create-post-btn:active { transform: scale(0.98); }
+
         /* TRANSICIÓN DE IMÁGENES */
         .fade-in-img { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .fade-in-img.loaded { opacity: 1; }
@@ -43,10 +74,10 @@
         .like-btn { cursor: pointer; transition: 0.3s; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
         .like-btn.active { color: var(--primary); }
 
-        /* PERFIL (CORREGIDO) */
-        .profile-header { position: relative; width: 100%; height: 220px; background: #151515; border-radius: 0 0 30px 30px; /* overflow: hidden; ELIMINADO PARA QUE NO CORTE LA FOTO */ }
+        /* PERFIL (CORREGIDO: FOTO ENTERA) */
+        .profile-header { position: relative; width: 100%; height: 220px; background: #151515; border-radius: 0 0 30px 30px; }
         .cover-img { width: 100%; height: 100%; object-fit: cover; border-radius: 0 0 30px 30px; }
-        .avatar-main { position: absolute; bottom: -50px; left: 25px; width: 110px; height: 110px; border-radius: 50%; border: 5px solid var(--bg); background: var(--primary); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 800; cursor: pointer; z-index: 2; }
+        .avatar-main { position: absolute; bottom: -50px; left: 25px; width: 110px; height: 110px; border-radius: 50%; border: 5px solid var(--bg); background: var(--primary); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 800; cursor: pointer; z-index: 2; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         .avatar-main img { width: 100%; height: 100%; object-fit: cover; }
         .profile-info { margin-top: 65px; padding: 0 25px; }
         .btn-edit-cover { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 10px 18px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: 0.3s; z-index: 2; }
@@ -91,7 +122,9 @@
 
         <main class="content-area">
             <section id="home-view" class="view-section active">
-                <button onclick="openModal('uploadModal')" style="background:var(--primary); color:white; border:none; width:100%; padding:20px; border-radius:20px; font-weight:800; cursor:pointer; margin-bottom:30px; font-size:1rem;">+ NUEVA PUBLICACIÓN</button>
+                <button onclick="openModal('uploadModal')" class="create-post-btn">
+                    <i class="fas fa-plus-circle"></i> Nueva Publicación
+                </button>
                 <div id="feed-container"></div>
             </section>
 
@@ -211,7 +244,6 @@
             el.classList.add('active');
         };
 
-        // FUNCIONES DE MODALES Y UPLOAD (Se mantienen igual)
         window.openModal = (id) => {
             document.getElementById(id).style.display = 'flex';
             if(id === 'bioModal') document.getElementById('bioInput').value = myData.biografia || '';
@@ -220,6 +252,7 @@
             document.getElementById(id).style.display = 'none';
             if(id === 'uploadModal') resetUploadForm();
         };
+
         const fileInput = document.getElementById('fileInput');
         fileInput.onchange = () => {
             if(fileInput.files[0]) {
@@ -227,6 +260,7 @@
                 document.getElementById('dropZone').classList.add('active');
             }
         };
+
         function resetUploadForm() {
             fileInput.value = "";
             document.getElementById('dropZone').classList.remove('active');
@@ -236,7 +270,6 @@
             document.getElementById('btnUpload').disabled = false;
         }
 
-        // NUEVA FUNCIÓN DE PUBLICAR QUE GUARDA LA FOTO DE PERFIL
         window.uploadPost = async () => {
             const file = fileInput.files[0];
             const price = parseFloat(document.getElementById('postPrice').value) || 0;
@@ -251,7 +284,7 @@
                 await addDoc(collection(db, "posts"), {
                     creador: myData.username,
                     creadorId: myData.id,
-                    creadorFoto: myData.fotoPerfil || null, // <-- AQUÍ SE GUARDA TU FOTO
+                    creadorFoto: myData.fotoPerfil || null, 
                     url: reader.result,
                     precio: price,
                     fecha: new Date(),
@@ -281,6 +314,7 @@
             await updateDoc(doc(db, "usuarios", myData.id), { biografia: newBio });
             myData.biografia = newBio; updateAllUI(); closeModal('bioModal');
         };
+
         window.saveMoney = async () => {
             const amount = parseFloat(document.getElementById('walletInput').value);
             if(amount > 0) {
@@ -291,7 +325,6 @@
             }
         };
 
-        // NUEVA FUNCIÓN LOADFEED CON AVATAR
         function loadFeed() {
             const q = query(collection(db, "posts"), orderBy("fecha", "desc"));
             onSnapshot(q, (snap) => {
