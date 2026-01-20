@@ -4,165 +4,179 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <title>Velum | Exclusive</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            /* TEMA OSCURO (BASE) */
-            --primary: #fa0050; /* Tu color rojo/rosado original */
+            /* MODO OSCURO (DEFAULT) */
+            --primary: #3b82f6; /* Azul más moderno */
             --bg: #000000;
-            --card: #111111;
+            --card: #121212;
             --text: #ffffff;
-            --text-sec: #888888;
-            --border: #222222;
-            --hover: #1a1a1a;
-            --nav-bg: rgba(0,0,0,0.95);
-            --shadow: 0 10px 30px rgba(0,0,0,0.6);
+            --text-sec: #9ca3af;
+            --border: #27272a;
+            --hover: #18181b;
+            --nav-bg: rgba(0,0,0,0.85);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --danger: #ef4444;
-            --verified: #3897f0; /* Azul Instagram */
+            --verified: #1d9bf0; /* Color oficial de verificado */
         }
 
         /* MODO CLARO */
         body.light-mode {
-            --bg: #f8f9fa;
+            --bg: #f3f4f6;
             --card: #ffffff;
             --text: #111827;
             --text-sec: #6b7280;
             --border: #e5e7eb;
-            --hover: #f3f4f6;
-            --nav-bg: rgba(255,255,255,0.95);
+            --hover: #f9fafb;
+            --nav-bg: rgba(255,255,255,0.9);
             --shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; transition: background 0.3s, color 0.3s; }
 
-        /* --- SEGURIDAD ANTI-ROBO --- */
-        .protected-content {
-            -webkit-user-select: none; /* Chrome/Safari */
-            -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* IE10+ */
-            user-select: none; /* Standard */
-            -webkit-touch-callout: none; /* iOS Safari */
-            pointer-events: none; /* Evita arrastrar o guardar imagen */
-        }
-        
-        /* Marca de Agua Sutil */
-        .watermark {
-            position: absolute; inset: 0; 
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0.05; pointer-events: none; z-index: 2;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><text x="50%" y="50%" font-size="20" fill="white" text-anchor="middle" transform="rotate(-45 100 100)">VELUM PROTECTED</text></svg>');
-        }
+        /* --- LOGO MEJORADO --- */
+        .logo-box { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; cursor: pointer; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #2563eb); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: white; transform: rotate(-5deg); box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .logo-text { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; }
 
-        /* --- SPLASH & LOGO --- */
+        /* --- UI PRINCIPAL --- */
         #splash { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
-        .logo-text { font-family: 'Cinzel', serif; font-size: 2.5rem; letter-spacing: 2px; font-weight: 700; color: var(--text); position: relative; }
-        .logo-text span { color: var(--primary); font-size: 3rem; line-height: 0; position: absolute; right: -15px; top: 5px; }
-        .splash-logo-big { font-size: 4rem; animation: fadeUp 1.2s ease; }
-        @keyframes fadeUp { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
-
-        /* --- VERIFICADO --- */
-        .verificado-stack { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-left: 4px; position: relative; vertical-align: middle; }
-        .v-bg { color: var(--verified); font-size: 18px; }
-        .v-check { color: white; font-size: 9px; position: absolute; }
-
-        /* --- LAYOUT --- */
         .view-container { position: relative; flex: 1; height: 100%; overflow: hidden; }
-        .view-section { position: absolute; inset: 0; visibility: hidden; opacity: 0; transform: translateY(10px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; background: var(--bg); padding-bottom: 120px; }
+        .view-section { 
+            position: absolute; inset: 0; visibility: hidden; opacity: 0; transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; background: var(--bg); padding-bottom: 120px;
+        }
         .view-section.active-view { visibility: visible; opacity: 1; transform: translateY(0); z-index: 10; }
 
-        aside { width: 300px; padding: 40px; border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 100; background: var(--card); }
+        /* --- SIDEBAR --- */
+        aside { width: 280px; padding: 30px; border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 100; background: var(--card); }
         .menu-item { display: flex; align-items: center; gap: 15px; padding: 14px; color: var(--text-sec); cursor: pointer; border-radius: 14px; transition: 0.2s; font-weight: 600; margin-bottom: 5px; }
         .menu-item:hover, .menu-item.active { background: var(--hover); color: var(--text); }
         .menu-item.active i { color: var(--primary); }
 
-        /* --- CHAT --- */
-        #chat-interface { display: flex; flex-direction: column; height: 100%; position: fixed; inset: 0; background: var(--bg); z-index: 2000; transform: translateX(100%); transition: 0.3s; }
-        #chat-interface.open { transform: translateX(0); }
-        .chat-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; background: var(--card); }
-        .chat-msgs { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; }
-        .msg-bubble { max-width: 75%; padding: 10px 15px; border-radius: 18px; margin-bottom: 10px; font-size: 0.95rem; line-height: 1.4; word-wrap: break-word; }
-        .msg-me { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .msg-other { background: var(--hover); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
-        .chat-input-area { padding: 15px; background: var(--card); border-top: 1px solid var(--border); display: flex; gap: 10px; }
-
-        /* --- COMENTARIOS --- */
-        .comments-sheet { position: fixed; bottom: 0; left: 0; width: 100%; height: 70%; background: var(--card); border-top-left-radius: 25px; border-top-right-radius: 25px; z-index: 2500; transform: translateY(100%); transition: 0.3s; display: flex; flex-direction: column; border-top: 1px solid var(--border); box-shadow: 0 -10px 40px rgba(0,0,0,0.8); }
-        .comments-sheet.open { transform: translateY(0); }
-        .c-item { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
-        .c-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
-
         /* --- POSTS --- */
         .feed-container { max-width: 550px; margin: 0 auto; width: 100%; }
         .post { background: var(--card); border-bottom: 1px solid var(--border); margin-bottom: 10px; }
-        @media(min-width: 768px) { .post { border: 1px solid var(--border); border-radius: 24px; margin-top: 25px; margin-bottom: 0; overflow: hidden; box-shadow: var(--shadow); } }
+        @media(min-width: 768px) { .post { border: 1px solid var(--border); border-radius: 24px; margin-top: 25px; margin-bottom: 0; overflow: hidden; } }
         
         .post-header { padding: 15px; display: flex; align-items: center; justify-content: space-between; }
         .user-info { display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); background: var(--hover); }
         
+        /* NUEVO ICONO VERIFICADO */
+        .badge-v { color: var(--verified); font-size: 14px; margin-left: 4px; display: inline-flex; align-items: center; justify-content: center; background: white; border-radius: 50%; width: 16px; height: 16px; box-shadow: 0 0 5px rgba(29, 155, 240, 0.3); }
+        .badge-v::before { font-size: 16px; } /* Ajuste fino */
+
         .post-img-box { position: relative; width: 100%; min-height: 400px; background: #080808; display: flex; align-items: center; overflow: hidden; }
         .post-img { width: 100%; object-fit: cover; }
         .blur-privacy { filter: blur(40px) brightness(0.7); transform: scale(1.1); pointer-events: none; }
         .lock-msg { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5; text-align: center; background: rgba(0,0,0,0.4); backdrop-filter: grayscale(1); }
-        
-        .post-actions { padding: 15px; padding-bottom: 5px; }
+        .post-actions { padding: 15px; }
         .actions-row { display: flex; align-items: center; gap: 20px; color: var(--text); margin-bottom: 8px; }
-        .icon-btn { font-size: 1.6rem; cursor: pointer; transition: 0.2s; }
-        .icon-btn:hover { transform: scale(1.1); }
-        .liked { color: var(--primary); animation: beat 0.3s; }
+        .heart-btn { font-size: 1.6rem; cursor: pointer; transition: 0.2s; }
+        .heart-btn.liked { color: var(--primary); animation: beat 0.3s; }
         @keyframes beat { 0% {transform: scale(1);} 50% {transform: scale(1.4);} 100% {transform: scale(1);} }
+        .likes-text { font-size: 0.9rem; color: var(--text); }
+        .likes-text b { font-weight: 700; }
+        .delete-btn { color: var(--text-sec); cursor: pointer; font-size: 1.1rem; padding: 5px; transition: 0.3s; }
+        .delete-btn:hover { color: var(--danger); }
 
-        /* --- UI ELEMENTS --- */
-        .btn-p { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; width: 100%; font-size: 1rem; }
-        .input-p { width: 100%; padding: 16px; background: var(--hover); border: 1px solid var(--border); color: var(--text); border-radius: 14px; outline: none; }
-        .select-p { width: 100%; padding: 16px; background: var(--hover); border: 1px solid var(--border); color: var(--text); border-radius: 14px; outline: none; appearance: none; font-size: 1rem; cursor: pointer; }
+        /* --- LOADING SPINNER (PAGINACIÓN) --- */
+        #loader-more { text-align: center; padding: 20px; display: none; color: var(--text-sec); font-size: 0.9rem; }
+
+        /* --- NOTIFICACIONES --- */
+        .notif-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid var(--border); background: var(--card); transition: 0.2s; }
+        .notif-item:hover { background: var(--hover); }
+        .notif-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--hover); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; position: relative;}
+        .notif-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .notif-type-badge { position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px; border-radius: 50%; display:flex; align-items: center; justify-content: center; font-size: 10px; color: white; border: 2px solid var(--card); }
+        .n-like { background: #ef4444; } 
+        .n-sub { background: #22c55e; }
+        .n-sys { background: var(--primary); }
+
+        /* --- UI GENERAL Y PERFIL --- */
+        .cover-container { width: 100%; height: 200px; background: var(--hover); position: relative; }
+        .cover-img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-top { padding: 0 20px; margin-top: -60px; position: relative; z-index: 10; }
+        .p-avatar { width: 110px; height: 110px; border-radius: 50%; border: 5px solid var(--bg); background: var(--card); object-fit: cover; box-shadow: var(--shadow); }
+        .cam-edit { position: absolute; background: var(--primary); color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; border: 3px solid var(--bg); z-index:20; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .cam-avatar { bottom: 5px; right: 5px; }
+        .cam-cover { top: 20px; right: 20px; background: rgba(0,0,0,0.5); border: none; }
+        .pm-card { background: var(--card); border: 1px solid var(--border); padding: 18px; border-radius: 18px; margin-top: 15px; position: relative; box-shadow: var(--shadow); }
+        .pm-tag { font-size: 0.7rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; background: rgba(59, 130, 246, 0.1); width: max-content; padding: 4px 8px; border-radius: 6px; }
+        .pm-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); }
+        .pm-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .pm-val { font-family: monospace; font-size: 1.05rem; color: var(--text); font-weight: 600; }
+        .copy-btn { background: var(--hover); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; font-weight: 700; transition:0.2s; }
         
+        .btn-p { background: var(--primary); color: white; border: none; padding: 14px 20px; border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; width: 100%; font-size: 1rem; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        .btn-p:active { transform: scale(0.98); }
+        .btn-s { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 12px; border-radius: 14px; font-weight: 600; cursor: pointer; width: 100%; transition:0.2s; }
+        .btn-s:hover { background: var(--hover); }
+
+        .file-upload-box { width: 100%; height: 250px; background: var(--hover); border: 2px dashed var(--border); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; overflow: hidden; position: relative; }
+        .file-preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-        .modal-content { background: var(--card); width: 92%; max-width: 450px; border-radius: 30px; border: 1px solid var(--border); padding: 30px; animation: popUp 0.3s ease; }
+        .modal-content { background: var(--card); width: 92%; max-width: 450px; border-radius: 30px; border: 1px solid var(--border); padding: 30px; animation: popUp 0.3s ease; box-shadow: var(--shadow); color: var(--text); }
         @keyframes popUp { from {transform: scale(0.9); opacity:0;} to {transform: scale(1); opacity:1;} }
+        .input-p { width: 100%; padding: 16px; background: var(--hover); border: 1px solid var(--border); color: var(--text); border-radius: 14px; margin-top: 10px; outline: none; font-size: 1rem; transition: 0.3s; }
+        .input-p:focus { border-color: var(--primary); background: var(--card); }
+
+        #loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .spinner { width: 50px; height: 50px; border: 5px solid var(--border); border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
 
         .mobile-nav { display: none; position: fixed; bottom: 0; width: 100%; background: var(--nav-bg); border-top: 1px solid var(--border); padding: 15px 0; justify-content: space-around; z-index: 500; backdrop-filter: blur(20px); }
-        .mobile-nav i { font-size: 1.5rem; color: var(--text-sec); }
+        .mobile-nav i { font-size: 1.5rem; color: var(--text-sec); transition: 0.3s; }
         .mobile-nav i.active { color: var(--primary); transform: translateY(-3px); }
-        .fab { position: fixed; bottom: 90px; right: 20px; background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 400; box-shadow: 0 10px 20px rgba(250, 0, 80, 0.4); cursor: pointer; }
+        .fab { position: fixed; bottom: 90px; right: 20px; background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 400; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4); cursor: pointer; transition: 0.3s; }
+        .fab:hover { transform: scale(1.05); }
 
         @media (max-width: 768px) { aside { display: none; } .mobile-nav { display: flex; } }
     </style>
 </head>
-<body oncontextmenu="return false;"> <div id="splash">
-        <div class="logo-text splash-logo-big">VELUM<span>.</span></div>
+<body>
+
+    <div id="splash">
+        <div class="logo-box" style="transform: scale(1.5);">
+            <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+            <div class="logo-text">VELUM<span style="color:var(--primary)">.</span></div>
+        </div>
     </div>
     
-    <div id="loading-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:3000; flex-direction:column; align-items:center; justify-content:center;">
-        <div class="spinner" style="border:4px solid var(--border); border-top:4px solid var(--primary); width:40px; height:40px; border-radius:50%; animation:spin 1s linear infinite;"></div>
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h3 style="color:white; font-weight:600;">Procesando...</h3>
     </div>
-    <style>@keyframes spin { 100% {transform: rotate(360deg);} }</style>
 
     <aside>
-        <div class="logo-text" style="margin-bottom:40px;">VELUM<span>.</span></div>
+        <div class="logo-box" onclick="navTo('feed')">
+            <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+            <div class="logo-text">VELUM<span style="color:var(--primary)">.</span></div>
+        </div>
         <div class="menu-item active" id="m-feed" onclick="navTo('feed')"><i class="fas fa-home"></i> Inicio</div>
-        <div class="menu-item" id="m-msgs" onclick="navTo('msgs')"><i class="fas fa-comment-alt"></i> Mensajes</div>
         <div class="menu-item" id="m-notifs" onclick="navTo('notifs')"><i class="fas fa-bell"></i> Actividad</div>
         <div class="menu-item" id="m-requests" onclick="navTo('requests')"><i class="fas fa-wallet"></i> Ventas</div>
         <div class="menu-item" id="m-profile" onclick="navTo('myProfile')"><i class="fas fa-user-circle"></i> Mi Perfil</div>
         <div style="margin-top:auto;">
             <div class="menu-item" onclick="toggleTheme()"><i class="fas fa-adjust"></i> Tema</div>
-            <button onclick="logout()" style="background:none; border:none; color:var(--text-sec); font-weight:700; padding:15px; width:100%; text-align:left; cursor:pointer;">Cerrar Sesión</button>
+            <button onclick="logout()" style="background:none; border:none; color:var(--text-sec); text-align:left; cursor:pointer; font-weight:700; padding:15px; width:100%;">Cerrar Sesión</button>
         </div>
     </aside>
 
     <div class="view-container">
         
         <div id="view-feed" class="view-section active-view">
-            <div style="padding:20px; font-weight:900; font-size:1.5rem; background:var(--nav-bg); backdrop-filter:blur(10px); position:sticky; top:0; z-index:50; border-bottom:1px solid var(--border);">Velum</div>
+            <div style="padding:20px; font-weight:900; font-size:1.5rem; background:var(--nav-bg); backdrop-filter:blur(10px); position:sticky; top:0; z-index:50; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;">
+                Explorar
+                <i class="fas fa-sync-alt" onclick="resetFeed()" style="font-size:1.2rem; cursor:pointer; color:var(--primary);"></i>
+            </div>
             <div class="feed-container" id="feed-items"></div>
-        </div>
-
-        <div id="view-msgs" class="view-section">
-            <div style="padding:20px; font-weight:800; font-size:1.5rem; border-bottom:1px solid var(--border);">Mensajes</div>
-            <div class="feed-container" id="inbox-list"></div>
+            <div id="loader-more"><div class="spinner" style="width:30px; height:30px; margin:0 auto; border-width:3px;"></div></div>
         </div>
 
         <div id="view-notifs" class="view-section">
@@ -171,31 +185,45 @@
         </div>
 
         <div id="view-profile" class="view-section">
-            <div style="width:100%; height:200px; background:var(--hover); position:relative;">
-                <img id="p-cover" style="width:100%; height:100%; object-fit:cover;" class="protected-content">
-                <div id="p-cam-cover" onclick="changePhoto('fotoPortada')" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); color:white; width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;"><i class="fas fa-camera"></i></div>
+            <div class="cover-container">
+                <img id="p-cover" class="cover-img" src="">
+                <div id="p-cam-cover" class="cam-edit cam-cover" onclick="changePhoto('fotoPortada')"><i class="fas fa-camera"></i></div>
             </div>
-            <div style="padding:0 20px; margin-top:-60px; position:relative; z-index:10;">
+            <div class="profile-top">
                 <div style="position:relative; width:max-content;">
-                    <img id="p-avatar" style="width:110px; height:110px; border-radius:50%; border:5px solid var(--bg); background:var(--card); object-fit:cover;" class="protected-content">
-                    <div id="p-cam-avatar" onclick="changePhoto('fotoPerfil')" style="position:absolute; bottom:5px; right:5px; background:var(--primary); color:white; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid var(--bg); cursor:pointer;"><i class="fas fa-camera" style="font-size:12px;"></i></div>
+                    <img id="p-avatar" class="p-avatar" src="">
+                    <div id="p-cam-avatar" class="cam-edit cam-avatar" onclick="changePhoto('fotoPerfil')"><i class="fas fa-camera"></i></div>
                 </div>
-                <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:flex-start;">
-                    <div>
-                        <h2 style="display:flex; align-items:center; font-family:'Cinzel', serif;">
+                
+                <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap;">
+                    <div style="max-width: 70%;">
+                        <h2 style="display:flex; align-items:center; gap:5px;">
                             <span id="p-user">@...</span>
-                            <span id="p-check" class="verificado-stack" style="display:none;"><i class="fas fa-certificate v-bg"></i><i class="fas fa-check v-check"></i></span>
+                            <i id="p-check" class="fas fa-check-circle badge-v" style="display:none;"></i>
                         </h2>
-                        <p id="p-bio" style="color:var(--text-sec); font-size:0.9rem; margin-top:5px;"></p>
+                        <p id="p-bio" style="color:var(--text-sec); margin-top:6px; font-size:0.95rem; line-height:1.4;"></p>
                     </div>
-                    <div id="p-action-btn" style="width:130px; display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end;"></div>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <div id="p-action-btn" style="width:140px;"></div>
+                        <button class="btn-s" style="width:50px; display:flex; justify-content:center;" onclick="shareProfile()"><i class="fas fa-share-alt"></i></button>
+                    </div>
+                </div>
+
+                <div id="p-venezuela-pay" style="margin-top:25px;">
+                    <h4 style="font-size:0.75rem; color:var(--text-sec); font-weight:700; text-transform:uppercase; letter-spacing:1px;">Métodos de Pago</h4>
+                    <div id="p-pm-data"></div>
+                </div>
+
+                <div style="display:flex; gap:30px; margin-top:25px; padding-bottom:15px; border-bottom:1px solid var(--border);">
+                    <div><b id="p-fans" style="font-size:1.1rem;">0</b> <span style="color:var(--text-sec); font-size:0.9rem;">Fans</span></div>
+                    <div><b id="p-posts" style="font-size:1.1rem;">0</b> <span style="color:var(--text-sec); font-size:0.9rem;">Posts</span></div>
                 </div>
             </div>
-            <div class="feed-container" id="p-grid" style="margin-top:20px;"></div>
+            <div class="feed-container" id="p-grid" style="margin-top:10px;"></div>
         </div>
 
         <div id="view-requests" class="view-section">
-            <div style="padding:20px; font-weight:800; font-size:1.5rem;">Ventas</div>
+            <div style="padding:20px; font-weight:800; font-size:1.5rem;">Mis Ventas</div>
             <div class="feed-container" id="sales-list"></div>
         </div>
 
@@ -205,71 +233,11 @@
 
     <nav class="mobile-nav">
         <i class="fas fa-home active" id="mn-feed" onclick="navTo('feed')"></i>
-        <i class="fas fa-comment-alt" id="mn-msgs" onclick="navTo('msgs')"></i>
         <i class="fas fa-bell" id="mn-notifs" onclick="navTo('notifs')"></i>
+        <i class="fas fa-wallet" id="mn-requests" onclick="navTo('requests')"></i>
         <i class="fas fa-user-circle" id="mn-profile" onclick="navTo('myProfile')"></i>
+        <i class="fas fa-adjust" onclick="toggleTheme()"></i>
     </nav>
-
-    <div id="chat-interface">
-        <div class="chat-header">
-            <i class="fas fa-arrow-left" onclick="closeChat()" style="font-size:1.2rem; cursor:pointer;"></i>
-            <div style="font-weight:700; font-size:1.1rem;" id="chat-title">Chat</div>
-        </div>
-        <div class="chat-msgs" id="chat-box"></div>
-        <div class="chat-input-area">
-            <input type="text" id="msg-in" class="input-p" placeholder="Mensaje..." style="border-radius:25px; padding:10px 15px;">
-            <button class="btn-p" onclick="sendMsg()" style="width:50px; border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <div class="comments-sheet" id="comments-sheet">
-        <div style="padding:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-            <h4 style="font-weight:800;">Comentarios</h4>
-            <i class="fas fa-times" onclick="toggleComments(false)" style="cursor:pointer; font-size:1.2rem;"></i>
-        </div>
-        <div id="comments-list" style="flex:1; overflow-y:auto;"></div>
-        <div style="padding:15px; border-top:1px solid var(--border); display:flex; gap:10px;">
-            <input type="text" id="com-in" class="input-p" placeholder="Escribe un comentario..." style="padding:10px;">
-            <button class="btn-p" onclick="sendComment()" style="width:auto; padding:0 20px;">Enviar</button>
-        </div>
-    </div>
-
-    <div class="modal" id="modal-post">
-        <div class="modal-content">
-            <h3>Nuevo Post</h3>
-            <div style="margin:20px 0; border:2px dashed var(--border); height:200px; display:flex; align-items:center; justify-content:center; border-radius:15px; cursor:pointer; overflow:hidden; position:relative;" onclick="document.getElementById('fileIn').click()">
-                <span id="post-lbl" style="color:var(--text-sec);">Seleccionar Foto</span>
-                <img id="post-prev" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:none;">
-            </div>
-            <input type="file" id="fileIn" hidden accept="image/*" onchange="previewPost(this)">
-            <button class="btn-p" onclick="publishPost()">Publicar</button>
-            <button class="btn-p" onclick="document.getElementById('modal-post').style.display='none'" style="background:transparent; color:var(--text); margin-top:10px;">Cancelar</button>
-        </div>
-    </div>
-
-    <div class="modal" id="modal-subscribe">
-        <div class="modal-content">
-            <h3 id="pay-to-user">Suscripción</h3>
-            <p style="font-size:0.85rem; color:var(--text-sec); margin-top:5px;">Selecciona tu plan y envía el capture.</p>
-            
-            <label style="font-size:0.8rem; color:var(--text-sec); margin-top:15px;">Elige un Plan:</label>
-            <select id="plan-selector" class="select-p" onchange="updateSubPrice()">
-                <option value="1">1 Mes</option>
-                <option value="6">6 Meses</option>
-                <option value="12">1 Año</option>
-            </select>
-
-            <div id="display-pm-cards" style="margin:20px 0;"></div>
-
-            <label style="font-size:0.8rem; color:var(--text-sec);">Comprobante (Capture)</label>
-            <label style="display:block; background:var(--hover); padding:10px; border-radius:10px; margin-top:5px; text-align:center; border:1px dashed var(--border); cursor:pointer;">
-                <i class="fas fa-upload"></i> Seleccionar Capture
-                <input type="file" id="proofIn" hidden accept="image/*">
-            </label>
-            <button class="btn-p" onclick="sendPaymentReq()" style="margin-top:20px;">ENVIAR PAGO</button>
-            <button class="btn-p" onclick="document.getElementById('modal-subscribe').style.display='none'" style="background:transparent; color:var(--text-sec); margin-top:10px;">Cerrar</button>
-        </div>
-    </div>
 
     <div class="modal" id="modal-config-pay">
         <div class="modal-content">
@@ -280,16 +248,45 @@
             <label style="font-size:0.75rem; color:var(--primary); font-weight:700; margin-top:15px; display:block;">CÉDULA</label><input type="text" id="ven-ci" class="input-p" placeholder="V-12345678">
             <label style="font-size:0.75rem; color:var(--primary); font-weight:700; margin-top:15px; display:block;">PRECIO MENSUAL ($)</label><input type="number" id="ven-price" class="input-p" placeholder="5">
             <div style="margin-top:25px; display:flex; gap:10px;">
-                <button class="btn-p" style="background:var(--hover); color:var(--text);" onclick="document.getElementById('modal-config-pay').style.display='none'">Cancelar</button>
+                <button class="btn-s" onclick="closeModal('modal-config-pay')">Cancelar</button>
                 <button class="btn-p" onclick="saveVenPay()">Guardar</button>
             </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-subscribe">
+        <div class="modal-content">
+            <h3 id="pay-to-user">Suscripción</h3>
+            <p style="font-size:0.85rem; color:var(--text-sec); margin-top:5px;">Realiza el Pago Móvil y sube el capture.</p>
+            <div id="display-pm-cards" style="margin:20px 0;"></div>
+            <label style="font-size:0.8rem; color:var(--text-sec);">Comprobante (Capture)</label>
+            <label style="display:block; background:var(--hover); padding:10px; border-radius:10px; margin-top:5px; text-align:center; border:1px dashed var(--border); cursor:pointer;">
+                <i class="fas fa-upload"></i> Seleccionar Capture
+                <input type="file" id="proofIn" hidden accept="image/*">
+            </label>
+            <button class="btn-p" onclick="sendPaymentReq()" style="margin-top:20px;">ENVIAR</button>
+            <button class="btn-s" onclick="closeModal('modal-subscribe')" style="margin-top:10px; border:none;">Cerrar</button>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-post">
+        <div class="modal-content">
+            <h3>Nueva Publicación</h3>
+            <div class="file-upload-box" onclick="document.getElementById('fileIn').click()">
+                <i class="fas fa-cloud-upload-alt file-icon"></i>
+                <span id="post-text" style="color:var(--text-sec); font-weight:600;">Toca para seleccionar foto</span>
+                <img id="post-pre-img" class="file-preview">
+            </div>
+            <input type="file" id="fileIn" hidden accept="image/*" onchange="previewPost(this)">
+            <button id="btn-pub-post" class="btn-p" onclick="publishPost()" style="margin-top:20px;" disabled>PUBLICAR</button>
+            <button class="btn-s" onclick="closeModal('modal-post')" style="width:100%; margin-top:10px; border:none;">Cancelar</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, where, arrayUnion, arrayRemove, deleteDoc, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, where, arrayUnion, arrayRemove, deleteDoc, getDocs, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = { 
             apiKey: "AIzaSyA-y05rnK5lD_v3G7YPS2wE1LlmAjrTz9c",
@@ -305,147 +302,296 @@
         const db = getFirestore(app);
 
         let myData = null;
-        let activeChatID = null;
-        let activePostID = null;
         let activeCreatorID = null;
-        let creatorBasePrice = 5; // Default
+        let viewingProfileID = null;
 
-        // --- AUTH & INIT ---
+        // VARIABLES PARA CARGA PROGRESIVA (INFINITE SCROLL)
+        let lastVisiblePost = null; 
+        let isFetchingPosts = false;
+        let isFeedEnded = false;
+
+        // --- TEMA ---
+        window.toggleTheme = () => {
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('velum_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        };
+        if(localStorage.getItem('velum_theme') === 'light') document.body.classList.add('light-mode');
+
+        // --- AUTH ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const snap = await getDoc(doc(db, "usuarios", user.uid));
                 if(snap.exists()) {
                     myData = { id: user.uid, ...snap.data() };
-                    document.getElementById('splash').style.opacity = '0'; setTimeout(()=>document.getElementById('splash').style.display='none',500);
-                    if(new URLSearchParams(location.search).get('u')) { openP(new URLSearchParams(location.search).get('u')); } else { navTo('feed'); }
+                    setTimeout(() => { document.getElementById('splash').style.opacity = '0'; setTimeout(() => document.getElementById('splash').style.display = 'none', 500); }, 800);
+                    
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if(urlParams.get('u')) { openP(urlParams.get('u')); window.history.replaceState({}, document.title, "/plataforma.html"); }
+                    else { navTo('feed'); }
+
+                    // INICIAR LISTENER DE SCROLL
+                    setupScrollListener();
                 }
-            } else { location.href = "index.html"; }
+            } else { window.location.href = "index.html"; }
         });
 
-        // --- NAV ---
+        // --- NAVEGACIÓN ---
         window.navTo = (view) => {
             document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active-view'));
             document.querySelectorAll('.menu-item, .mobile-nav i').forEach(el => el.classList.remove('active'));
-            if(view === 'feed') { document.getElementById('view-feed').classList.add('active-view'); loadFeed(); }
-            else if(view === 'msgs') { document.getElementById('view-msgs').classList.add('active-view'); loadInbox(); }
-            else if(view === 'notifs') { document.getElementById('view-notifs').classList.add('active-view'); loadNotifications(); }
-            else if(view === 'requests') { document.getElementById('view-requests').classList.add('active-view'); loadSales(); }
-            else if(view === 'myProfile') { renderProfile(myData.id); document.getElementById('view-profile').classList.add('active-view'); }
             
-            const btnId = view === 'myProfile' ? 'profile' : view;
-            if(document.getElementById(`m-${btnId}`)) document.getElementById(`m-${btnId}`).classList.add('active');
-            if(document.getElementById(`mn-${btnId}`)) document.getElementById(`mn-${btnId}`).classList.add('active');
+            if(view === 'feed') {
+                 document.getElementById('view-feed').classList.add('active-view');
+                 document.getElementById('m-feed').classList.add('active');
+                 document.getElementById('mn-feed').classList.add('active');
+                 // Si está vacío, cargar primera tanda
+                 if(!lastVisiblePost) loadNextBatch(); 
+            } else if(view === 'myProfile') {
+                 renderProfile(myData.id);
+                 document.getElementById('view-profile').classList.add('active-view');
+                 document.getElementById('m-profile').classList.add('active');
+                 document.getElementById('mn-profile').classList.add('active');
+            } else if(view === 'requests') {
+                 loadSales();
+                 document.getElementById('view-requests').classList.add('active-view');
+                 document.getElementById('m-requests').classList.add('active');
+                 document.getElementById('mn-requests').classList.add('active');
+            } else if(view === 'notifs') {
+                 loadNotifications();
+                 document.getElementById('view-notifs').classList.add('active-view');
+                 document.getElementById('m-notifs').classList.add('active');
+                 document.getElementById('mn-notifs').classList.add('active');
+            } else {
+                 document.getElementById('view-profile').classList.add('active-view');
+            }
         };
 
-        // --- FEED & POSTS ---
-        function loadFeed() {
-            onSnapshot(query(collection(db, "posts"), orderBy("fecha", "desc"), limit(50)), (snap) => {
-                const c = document.getElementById('feed-items'); c.innerHTML = "";
-                snap.forEach(async (d) => {
-                    const creator = (await getDoc(doc(db, "usuarios", d.data().creadorId))).data();
-                    if(creator) renderPost(d.id, d.data(), creator, c);
-                });
+        // --- FEED INFINITO (NUEVO SISTEMA) ---
+        window.resetFeed = () => {
+            document.getElementById('feed-items').innerHTML = "";
+            lastVisiblePost = null;
+            isFeedEnded = false;
+            loadNextBatch();
+        }
+
+        async function loadNextBatch() {
+            if(isFetchingPosts || isFeedEnded) return;
+            isFetchingPosts = true;
+            document.getElementById('loader-more').style.display = 'block';
+
+            try {
+                let q;
+                const postsRef = collection(db, "posts");
+                
+                // Si es la primera carga
+                if(!lastVisiblePost) {
+                    q = query(postsRef, orderBy("fecha", "desc"), limit(5));
+                } else {
+                    // Si ya hay posts, carga después del último
+                    q = query(postsRef, orderBy("fecha", "desc"), startAfter(lastVisiblePost), limit(5));
+                }
+
+                const querySnapshot = await getDocs(q);
+                
+                if(querySnapshot.empty) {
+                    isFeedEnded = true;
+                    document.getElementById('loader-more').innerText = "No hay más publicaciones.";
+                } else {
+                    lastVisiblePost = querySnapshot.docs[querySnapshot.docs.length - 1];
+                    const container = document.getElementById('feed-items');
+                    
+                    for (const d of querySnapshot.docs) {
+                        const postData = d.data();
+                        const cSnap = await getDoc(doc(db, "usuarios", postData.creadorId));
+                        // Renderizar solo si existe el usuario
+                        if(cSnap.exists()) renderPost(d.id, postData, cSnap.data(), container);
+                    }
+                    document.getElementById('loader-more').style.display = 'none';
+                }
+            } catch (error) {
+                console.error("Error loading feed:", error);
+            }
+            isFetchingPosts = false;
+        }
+
+        function setupScrollListener() {
+            const feedView = document.getElementById('view-feed');
+            feedView.addEventListener('scroll', () => {
+                // Si el usuario llega cerca del final (diferencia de 100px)
+                if(feedView.scrollTop + feedView.clientHeight >= feedView.scrollHeight - 100) {
+                    loadNextBatch();
+                }
             });
         }
 
         function renderPost(pid, post, creator, container) {
             const isSub = (post.creadorId === myData.id) || (myData.suscripciones?.some(s => s.creatorId === post.creadorId && s.expiresAt > Date.now()));
             const isLiked = post.likes?.some(l => l.uid === myData.id);
-            const likesCount = post.likes ? post.likes.length : 0;
-            const commentsCount = post.comments ? post.comments.length : 0;
+            const isPending = myData.pendientes?.includes(post.creadorId);
 
-            const div = document.createElement('div'); div.className = 'post';
+            let likesText = "Sé el primero en dar like";
+            if(post.likes && post.likes.length > 0) {
+                const lastLiker = post.likes[post.likes.length - 1];
+                const count = post.likes.length - 1;
+                likesText = `Le gusta a <b>@${lastLiker.username}</b>${count > 0 ? ` y ${count} más` : ''}`;
+            }
+
+            const div = document.createElement('div');
+            div.className = 'post';
             div.innerHTML = `
                 <div class="post-header">
                     <div class="user-info" onclick="openP('${post.creadorId}')">
                         <img src="${creator.fotoPerfil || 'https://via.placeholder.com/50'}" class="avatar">
-                        <div style="font-weight:700;">@${creator.username} ${creator.verificado ? '<span class="verificado-stack"><i class="fas fa-certificate v-bg"></i><i class="fas fa-check v-check"></i></span>' : ''}</div>
+                        <div style="font-weight:700;">@${creator.username} ${creator.verificado ? '<i class="fas fa-check-circle badge-v"></i>' : ''}</div>
                     </div>
-                    ${post.creadorId === myData.id ? `<i class="fas fa-trash" style="color:var(--text-sec); cursor:pointer;" onclick="deletePost('${pid}')"></i>` : ''}
+                    ${post.creadorId === myData.id ? `<i class="fas fa-trash delete-btn" onclick="deletePost('${pid}', this)"></i>` : ''}
                 </div>
                 <div class="post-img-box">
-                    ${isSub ? 
-                        `<img src="${post.url}" class="post-img protected-content">
-                         <div class="watermark"></div>` : 
-                        `<div class="lock-msg"><h3>EXCLUSIVO</h3><button class="btn-p" style="width:auto; margin-top:10px;" onclick="openSubModal('${post.creadorId}', '${creator.username}')">SUSCRIBIRSE</button></div><img src="${post.url}" class="post-img blur-privacy">`}
+                    ${isSub ? `<img src="${post.url}" class="post-img">` : 
+                        `<div class="lock-msg">
+                            <h3 style="font-weight:900; letter-spacing:-1px; color:white;">EXCLUSIVO</h3>
+                            <button class="btn-p" style="width:auto; padding:10px 20px; margin-top:10px;" onclick="openSubModal('${post.creadorId}', '${creator.username}')">
+                                ${isPending ? 'VERIFICANDO...' : 'DESBLOQUEAR'}
+                            </button>
+                        </div>
+                        <img src="${post.url}" class="post-img blur-privacy">`
+                    }
                 </div>
                 <div class="post-actions">
                     <div class="actions-row">
-                        <i class="${isLiked ? 'fas' : 'far'} fa-heart icon-btn ${isLiked?'liked':''}" onclick="toggleLike('${pid}', '${post.creadorId}', ${isLiked})"></i>
-                        <i class="far fa-comment icon-btn" onclick="toggleComments('${pid}', ${isSub})"></i>
+                        <i class="${isLiked ? 'fas' : 'far'} fa-heart heart-btn ${isLiked?'liked':''}" onclick="toggleLike('${pid}', '${post.creadorId}', ${isLiked}, this)"></i>
                     </div>
-                    <div style="font-size:0.9rem;">
-                        <b>${likesCount} likes</b> &bull; ${commentsCount} comentarios
-                    </div>
+                    <div class="likes-text">${likesText}</div>
                 </div>
             `;
             container.appendChild(div);
         }
 
-        // --- SISTEMA DE PAGOS CON PLANES (1M, 6M, 1A) ---
-        window.openSubModal = async (uid, name) => {
-            activeCreatorID = uid;
-            const snap = await getDoc(doc(db, "usuarios", uid));
-            const creator = snap.data();
-            creatorBasePrice = parseFloat(creator.subPrice || 5);
-            
-            document.getElementById('pay-to-user').innerText = `Suscribirse a @${name}`;
-            updateSubPrice(); // Calcular precio inicial
+        // --- LIKES OPTIMIZADOS ---
+        window.toggleLike = async (pid, ownerId, isLiked, btn) => {
+            // Feedback visual instantáneo
+            btn.classList.toggle('fas'); btn.classList.toggle('far'); btn.classList.toggle('liked');
 
-            const container = document.getElementById('display-pm-cards');
-            if(creator.ven_tel) {
-                container.innerHTML = `
-                    <div class="pm-card">
-                        <div class="pm-tag">Pago Móvil</div>
-                        <div class="pm-row"><span>BANCO</span> <b>${creator.ven_banco}</b></div>
-                        <div class="pm-row"><span>TELÉFONO</span> <div><b>${creator.ven_tel}</b></div></div>
-                        <div class="pm-row"><span>CÉDULA</span> <div><b>${creator.ven_ci}</b></div></div>
-                    </div>`;
+            const postRef = doc(db, "posts", pid);
+            const pSnap = await getDoc(postRef);
+            if(!pSnap.exists()) return;
+
+            let currentLikes = pSnap.data().likes || [];
+            if (isLiked) {
+                currentLikes = currentLikes.filter(l => l.uid !== myData.id);
             } else {
-                container.innerHTML = "<p>El creador no tiene método de pago.</p>";
+                currentLikes.push({ uid: myData.id, username: myData.username });
+                // NOTIFICAR
+                if(ownerId !== myData.id) {
+                    addDoc(collection(db, `usuarios/${ownerId}/notificaciones`), {
+                        tipo: 'like', 
+                        fromUser: myData.username,
+                        fromUid: myData.id, 
+                        userPic: myData.fotoPerfil,
+                        texto: 'le dio like a tu post.', 
+                        fecha: Date.now()
+                    });
+                }
             }
-            document.getElementById('modal-subscribe').style.display='flex';
-        }
-
-        window.updateSubPrice = () => {
-            const months = parseInt(document.getElementById('plan-selector').value);
-            const total = creatorBasePrice * months;
-            document.getElementById('pay-to-user').innerText = `Total a pagar: $${total}`;
-        }
-
-        window.sendPaymentReq = async () => {
-            const file = document.getElementById('proofIn').files[0];
-            const months = parseInt(document.getElementById('plan-selector').value);
-            if(!file) return alert("Falta el comprobante");
-            
-            document.getElementById('loading-overlay').style.display='flex';
-            const compressed = await compressImage(file);
-            
-            await addDoc(collection(db, "solicitudes"), {
-                creatorId: activeCreatorID, userId: myData.id, username: myData.username,
-                proof: compressed, status: 'pending', fecha: Date.now(), months: months
-            });
-            alert("Enviado. Tu acceso se activará cuando el creador apruebe.");
-            location.reload();
-        }
-
-        // --- APROBAR VENTA CON TIEMPO DINÁMICO ---
-        window.approveSale = async (id, uid, months) => {
-            const timeToAdd = months * 30 * 24 * 60 * 60 * 1000;
-            const exp = Date.now() + timeToAdd;
-            
-            await updateDoc(doc(db, "usuarios", uid), {
-                suscripciones: arrayUnion({ creatorId: myData.id, expiresAt: exp })
-            });
-            await updateDoc(doc(db, "solicitudes", id), { status: 'approved' });
-            
-            addDoc(collection(db, `usuarios/${uid}/notificaciones`), {
-                tipo: 'sub', fromUser: myData.username, 
-                texto: `activó tu suscripción por ${months} mes(es).`, fecha: Date.now()
-            });
-            alert("Suscripción activada por " + months + " mes(es).");
+            await updateDoc(postRef, { likes: currentLikes });
         };
 
+        window.deletePost = async (pid, btn) => {
+            if(confirm("¿Eliminar publicación permanentemente?")) {
+                await deleteDoc(doc(db, "posts", pid));
+                btn.closest('.post').remove();
+            }
+        };
+
+        // --- NOTIFICACIONES MEJORADAS ---
+        function loadNotifications() {
+            const container = document.getElementById('notif-list');
+            container.innerHTML = '<div class="spinner" style="margin:20px auto;"></div>';
+
+            const notifRef = collection(db, `usuarios/${myData.id}/notificaciones`);
+            const q = query(notifRef, orderBy("fecha", "desc"));
+
+            onSnapshot(q, (snap) => {
+                container.innerHTML = snap.empty ? `<p style="text-align:center; padding:50px; color:var(--text-sec);">No tienes actividad reciente.</p>` : "";
+                
+                const now = Date.now();
+                const oneDay = 24 * 60 * 60 * 1000;
+
+                snap.forEach(d => {
+                    const n = d.data();
+                    
+                    // AUTO DELETE SI ES VIEJA (>24h)
+                    if (now - n.fecha > oneDay) {
+                        deleteDoc(d.ref); 
+                        return; 
+                    }
+
+                    const diff = Math.floor((now - n.fecha) / 3600000); 
+                    const timeStr = diff < 1 ? "Hace momentos" : `Hace ${diff}h`;
+
+                    // Icono mejorado con imagen de usuario
+                    let badgeIcon = '<i class="fas fa-info"></i>';
+                    let badgeClass = 'n-sys';
+                    
+                    if(n.tipo === 'like') { badgeIcon = '<i class="fas fa-heart"></i>'; badgeClass = 'n-like'; }
+                    if(n.tipo === 'sub') { badgeIcon = '<i class="fas fa-dollar-sign"></i>'; badgeClass = 'n-sub'; }
+
+                    const userImg = n.userPic || 'https://via.placeholder.com/40';
+
+                    const div = document.createElement('div');
+                    div.className = 'notif-item';
+                    div.innerHTML = `
+                        <div class="notif-icon">
+                            <img src="${userImg}" class="notif-img">
+                            <div class="notif-type-badge ${badgeClass}">${badgeIcon}</div>
+                        </div>
+                        <div class="notif-content">
+                            <div class="notif-text"><b>@${n.fromUser}</b> ${n.texto}</div>
+                            <div class="notif-time">${timeStr}</div>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            });
+        }
+
+        // --- PERFIL ---
+        window.openP = (uid) => { renderProfile(uid); navTo('other'); }
+        async function renderProfile(uid) {
+            viewingProfileID = uid;
+            const snap = await getDoc(doc(db, "usuarios", uid));
+            if(!snap.exists()) return;
+            const user = snap.data();
+            const isMe = uid === myData.id;
+
+            document.getElementById('p-user').innerText = "@" + user.username;
+            document.getElementById('p-bio').innerText = user.biografia || "Bienvenido a mi espacio exclusivo.";
+            document.getElementById('p-avatar').src = user.fotoPerfil || 'https://via.placeholder.com/150';
+            document.getElementById('p-cover').src = user.fotoPortada || 'https://via.placeholder.com/800x200';
+            document.getElementById('p-check').style.display = user.verificado ? 'inline-flex' : 'none';
+            document.getElementById('p-cam-avatar').style.display = isMe ? 'flex' : 'none';
+            document.getElementById('p-cam-cover').style.display = isMe ? 'flex' : 'none';
+            const pmDiv = document.getElementById('p-pm-data');
+            pmDiv.innerHTML = user.ven_tel ? `<div class="pm-card"><div class="pm-row"><span>Banco:</span> <b class="pm-val">${user.ven_banco}</b></div><div class="pm-row"><span>Teléfono:</span> <b class="pm-val">${user.ven_tel}</b></div><div class="pm-row"><span>Cédula:</span> <b class="pm-val">${user.ven_ci}</b></div></div>` : (isMe ? `<p style="color:var(--text-sec); font-size:0.8rem;">Sin pagos configurados.</p>` : "");
+            const actions = document.getElementById('p-action-btn');
+            if(isMe) actions.innerHTML = `<button class="btn-s" onclick="openConfigVen()" style="width:100%;">Editar Pagos</button>`;
+            else {
+                const isSub = myData.suscripciones?.some(s => s.creatorId === uid && s.expiresAt > Date.now());
+                actions.innerHTML = isSub ? `<button class="btn-s" style="color:var(--primary); border-color:var(--primary); width:100%;">SUSCRITO ✓</button>` : `<button class="btn-p" onclick="openSubModal('${uid}', '${user.username}')" style="width:100%;">SUSCRIBIRSE</button>`;
+            }
+            const grid = document.getElementById('p-grid');
+            onSnapshot(query(collection(db, "posts"), where("creadorId", "==", uid), orderBy("fecha", "desc")), (s) => {
+                grid.innerHTML = "";
+                document.getElementById('p-posts').innerText = s.size;
+                s.forEach(d => renderPost(d.id, d.data(), user, grid));
+            });
+        }
+        window.shareProfile = () => {
+            const url = `${window.location.origin}${window.location.pathname}?u=${viewingProfileID}`;
+            navigator.clipboard.writeText(url).then(() => alert("Enlace copiado"));
+        };
+
+        // --- VENTAS & NOTIFICACIONES ---
         function loadSales() {
             const container = document.getElementById('sales-list');
             onSnapshot(query(collection(db, "solicitudes"), where("creatorId", "==", myData.id), where("status", "==", "pending")), (snap) => {
@@ -453,79 +599,55 @@
                 snap.forEach(d => {
                     const r = d.data();
                     const div = document.createElement('div'); div.className='post'; div.style.padding="20px";
-                    // Compatibilidad con registros viejos que no tengan 'months' (asumir 1)
-                    const m = r.months || 1;
-                    div.innerHTML = `
-                        <p style="margin-bottom:10px;"><b>@${r.username}</b> pagó por <b>${m} Mes(es)</b>:</p>
-                        <img src="${r.proof}" style="width:100%; border-radius:15px; margin-bottom:15px; max-height:300px; object-fit:contain; background:#000;">
-                        <button class="btn-p" onclick="approveSale('${d.id}', '${r.userId}', ${m})">APROBAR ACCESO (${m} MESES)</button>
-                    `;
+                    div.innerHTML = `<p><b>@${r.username}</b> pagó:</p><img src="${r.proof}" style="width:100%; border-radius:15px; margin:10px 0; max-height:300px; object-fit:contain; background:#000;"><button class="btn-p" onclick="approveSale('${d.id}', '${r.userId}')">APROBAR</button>`;
                     container.appendChild(div);
                 });
             });
         }
+        window.approveSale = async (id, uid) => {
+            const exp = Date.now() + (30*24*60*60*1000);
+            await updateDoc(doc(db, "usuarios", uid), { suscripciones: arrayUnion({ creatorId: myData.id, expiresAt: exp }), pendientes: arrayRemove(myData.id) });
+            await updateDoc(doc(db, "solicitudes", id), { status: 'approved' });
+            
+            // NOTIFICAR CON FOTO DE PERFIL
+            addDoc(collection(db, `usuarios/${uid}/notificaciones`), {
+                tipo: 'sub', 
+                fromUser: myData.username, 
+                fromUid: myData.id,
+                userPic: myData.fotoPerfil,
+                texto: 'aprobó tu suscripción. ¡Bienvenido!', 
+                fecha: Date.now()
+            });
+            alert("Listo!");
+        };
 
-        // --- COMENTARIOS, LIKES, CHAT (MISMOS QUE ANTES) ---
-        window.toggleComments = async (pid, canComment) => {
-            if(pid === false) { document.getElementById('comments-sheet').classList.remove('open'); return; }
-            activePostID = pid;
-            document.getElementById('comments-sheet').classList.add('open');
-            document.getElementById('com-in').disabled = !canComment;
-            document.getElementById('com-in').placeholder = canComment ? "Escribe algo bonito..." : "Suscríbete para comentar";
-            const list = document.getElementById('comments-list'); list.innerHTML = '<div class="spinner"></div>';
-            const pSnap = await getDoc(doc(db, "posts", pid));
-            const comments = pSnap.data().comments || [];
-            list.innerHTML = "";
-            comments.forEach(c => { list.innerHTML += `<div class="c-item"><img src="${c.pic}" class="c-avatar"><div><span style="font-weight:700; font-size:0.9rem;">${c.user}</span><p style="font-size:0.9rem; color:var(--text-sec);">${c.text}</p></div></div>`; });
-        };
-        window.sendComment = async () => {
-            const txt = document.getElementById('com-in').value; if(!txt.trim()) return;
-            const newComment = { user: myData.username, pic: myData.fotoPerfil||'', text: txt, date: Date.now() };
-            await updateDoc(doc(db, "posts", activePostID), { comments: arrayUnion(newComment) });
-            document.getElementById('com-in').value = ""; toggleComments(activePostID, true);
-        };
-        window.openChat = async (uid, username) => {
-            const chatId = [myData.id, uid].sort().join("_"); activeChatID = chatId;
-            document.getElementById('chat-title').innerText = "@" + username;
-            document.getElementById('chat-interface').classList.add('open');
-            loadMessages(chatId);
-        };
-        window.closeChat = () => document.getElementById('chat-interface').classList.remove('open');
-        function loadMessages(chatId) {
-            const box = document.getElementById('chat-box');
-            onSnapshot(query(collection(db, `chats/${chatId}/messages`), orderBy("fecha", "asc")), (snap) => {
-                box.innerHTML = ""; const now = Date.now();
-                snap.forEach(d => {
-                    const m = d.data(); if(now - m.fecha > 86400000) { deleteDoc(d.ref); return; }
-                    const div = document.createElement('div'); div.className = `msg-bubble ${m.sender === myData.id ? 'msg-me' : 'msg-other'}`; div.innerText = m.txt; box.appendChild(div);
-                });
-                box.scrollTop = box.scrollHeight;
+        // --- UTILS ---
+        function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader(); reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image(); img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+                        let width = img.width, height = img.height, maxDim = 1000;
+                        if (width > height && width > maxDim) { height *= maxDim / width; width = maxDim; }
+                        else if (height > maxDim) { width *= maxDim / height; height = maxDim; }
+                        canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.6));
+                    };
+                };
             });
         }
-        window.sendMsg = async () => {
-            const txt = document.getElementById('msg-in').value; if(!txt.trim() || !activeChatID) return;
-            await addDoc(collection(db, `chats/${activeChatID}/messages`), { sender: myData.id, txt: txt, fecha: Date.now() });
-            document.getElementById('msg-in').value = "";
-        };
-        function loadInbox() { document.getElementById('inbox-list').innerHTML = `<p style="text-align:center; color:var(--text-sec); padding:20px;">Busca un perfil para enviar mensaje.</p>`; }
-        window.toggleLike = async (pid, owner, isLiked) => {
-             const ref = doc(db, "posts", pid);
-             if(isLiked) await updateDoc(ref, { likes: arrayRemove({ uid: myData.id, username: myData.username }) });
-             else {
-                 await updateDoc(ref, { likes: arrayUnion({ uid: myData.id, username: myData.username }) });
-                 if(owner !== myData.id) addDoc(collection(db, `usuarios/${owner}/notificaciones`), { tipo:'like', fromUser:myData.username, userPic:myData.fotoPerfil, texto:'te dio like', fecha:Date.now() });
-             }
-        };
-        window.openPostModal = () => document.getElementById('modal-post').style.display='flex';
-        window.previewPost = (input) => { const reader = new FileReader(); reader.onload=e=>{document.getElementById('post-prev').src=e.target.result; document.getElementById('post-prev').style.display='block';}; reader.readAsDataURL(input.files[0]); };
-        async function compressImage(file) { return new Promise((resolve) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = (event) => { const img = new Image(); img.src = event.target.result; img.onload = () => { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let width = img.width, height = img.height, maxDim = 1000; if (width > height && width > maxDim) { height *= maxDim / width; width = maxDim; } else if (height > maxDim) { width *= maxDim / height; height = maxDim; } canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height); resolve(canvas.toDataURL('image/jpeg', 0.6)); }; }; }); }
-        window.publishPost = async () => { document.getElementById('loading-overlay').style.display='flex'; document.getElementById('modal-post').style.display='none'; const img = await compressImage(document.getElementById('fileIn').files[0]); await addDoc(collection(db, "posts"), { creadorId: myData.id, url: img, fecha: Date.now(), likes: [], comments: [] }); location.reload(); };
-        window.openP = async (uid) => { const u = (await getDoc(doc(db, "usuarios", uid))).data(); document.getElementById('p-user').innerText = "@"+u.username; document.getElementById('p-check').style.display = u.verificado ? 'inline-flex' : 'none'; document.getElementById('p-avatar').src = u.fotoPerfil || ''; document.getElementById('p-cover').src = u.fotoPortada || ''; const actionDiv = document.getElementById('p-action-btn'); if(uid === myData.id) { actionDiv.innerHTML = `<button class="btn-s" style="padding:8px;" onclick="openConfigVen()">Cobros</button>`; } else { actionDiv.innerHTML = `<button class="btn-p" onclick="openChat('${uid}', '${u.username}')" style="width:auto; padding:8px 15px;"><i class="fas fa-comment"></i></button>`; } onSnapshot(query(collection(db, "posts"), where("creadorId", "==", uid)), s => { const g = document.getElementById('p-grid'); g.innerHTML=""; s.forEach(d=>renderPost(d.id, d.data(), u, g)); }); navTo('other'); }
-        window.logout = () => signOut(auth).then(()=>location.href="index.html");
-        
-        // CONFIG PAGOS
-        window.openConfigVen = () => document.getElementById('modal-config-pay').style.display='flex';
+        window.openPostModal = () => { document.getElementById('post-pre-img').style.display='none'; document.getElementById('post-text').style.display='block'; document.getElementById('fileIn').value = ""; document.getElementById('btn-pub-post').disabled = true; document.getElementById('modal-post').style.display='flex'; }
+        window.previewPost = (input) => { if(input.files[0]){ const reader = new FileReader(); reader.onload = e => { document.getElementById('post-pre-img').src = e.target.result; document.getElementById('post-pre-img').style.display='block'; document.getElementById('post-text').style.display='none'; document.getElementById('btn-pub-post').disabled = false; }; reader.readAsDataURL(input.files[0]); } };
+        window.publishPost = async () => { document.getElementById('loading-overlay').style.display = 'flex'; document.getElementById('modal-post').style.display = 'none'; try { const compressed = await compressImage(document.getElementById('fileIn').files[0]); await addDoc(collection(db, "posts"), { creadorId: myData.id, url: compressed, fecha: Date.now(), likes: [] }); location.reload(); } catch (e) { alert("Error"); document.getElementById('loading-overlay').style.display = 'none'; } };
+        window.openConfigVen = () => { document.getElementById('ven-banco').value = myData.ven_banco || ""; document.getElementById('ven-tel').value = myData.ven_tel || ""; document.getElementById('ven-ci').value = myData.ven_ci || ""; document.getElementById('ven-price').value = myData.subPrice || 5; document.getElementById('modal-config-pay').style.display='flex'; }
         window.saveVenPay = async () => { await updateDoc(doc(db, "usuarios", myData.id), { ven_banco: document.getElementById('ven-banco').value, ven_tel: document.getElementById('ven-tel').value, ven_ci: document.getElementById('ven-ci').value, subPrice: document.getElementById('ven-price').value }); location.reload(); }
+        window.openSubModal = async (uid, name) => { activeCreatorID = uid; const snap = await getDoc(doc(db, "usuarios", uid)); const creator = snap.data(); document.getElementById('pay-to-user').innerText = `Suscribirse a @${name} ($${creator.subPrice||5})`; document.getElementById('display-pm-cards').innerHTML = creator.ven_tel ? `<div class="pm-card"><div class="pm-tag">Pago Móvil</div><div class="pm-row"><span>BANCO</span> <b>${creator.ven_banco}</b></div><div class="pm-row"><span>TEL</span> <div><b>${creator.ven_tel}</b> <button class="copy-btn" onclick="navigator.clipboard.writeText('${creator.ven_tel}')">COPIAR</button></div></div><div class="pm-row"><span>C.I</span> <div><b>${creator.ven_ci}</b> <button class="copy-btn" onclick="navigator.clipboard.writeText('${creator.ven_ci}')">COPIAR</button></div></div></div>` : "<p>Sin datos.</p>"; document.getElementById('modal-subscribe').style.display='flex'; }
+        window.sendPaymentReq = async () => { const file = document.getElementById('proofIn').files[0]; if(!file) return alert("Falta comprobante"); document.getElementById('loading-overlay').style.display = 'flex'; const compressed = await compressImage(file); await addDoc(collection(db, "solicitudes"), { creatorId: activeCreatorID, userId: myData.id, username: myData.username, proof: compressed, status: 'pending', fecha: Date.now() }); await updateDoc(doc(db, "usuarios", myData.id), { pendientes: arrayUnion(activeCreatorID) }); alert("Enviado"); location.reload(); }
+        window.changePhoto = (field) => { const inp = document.createElement('input'); inp.type='file'; inp.onchange = async e => { document.getElementById('loading-overlay').style.display='flex'; const compressed = await compressImage(e.target.files[0]); await updateDoc(doc(db, "usuarios", myData.id), { [field]: compressed }); location.reload(); }; inp.click(); };
+        window.closeModal = (id) => document.getElementById(id).style.display='none';
+        window.logout = () => signOut(auth).then(() => location.href="index.html");
     </script>
 </body>
 </html>
